@@ -140,7 +140,7 @@ input:focus{border-color:var(--yellow);}
   <div class="status-bar-spacer"></div>
   <div class="topbar">
     <h1>📦 Tote Organizer</h1>
-    <div class="subtitle">Voice · AI photo · QR labels · v6</div>
+    <div class="subtitle">Voice · AI photo · QR labels · v7</div>
   </div>
   <div class="page-scroll">
 
@@ -261,7 +261,7 @@ let isListening = false;
 // Accumulate finals between natural speech pauses
 let pendingText = '';
 let pauseTimer = null;
-const PAUSE_MS = 1200; // silence = item boundary
+const PAUSE_MS = 600; // silence = item boundary
 
 function persist() { localStorage.setItem('shed-totes', JSON.stringify(totes)); }
 
