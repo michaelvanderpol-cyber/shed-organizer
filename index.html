@@ -43,20 +43,18 @@ html,body{height:100%;width:100%;background:var(--bg);color:var(--text);font-fam
 .tote-body{padding:12px 14px;}
 .tote-preview{font-size:0.82rem;color:var(--muted);line-height:1.5;margin-bottom:10px;min-height:38px;}
 .tote-actions{display:flex;gap:8px;}
-.btn{border:none;border-radius:10px;padding:11px 18px;font-weight:700;font-size:0.9rem;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:opacity 0.15s,transform 0.1s;font-family:inherit;}
+.btn{border:none;border-radius:10px;padding:11px 18px;font-weight:700;font-size:0.9rem;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;transition:opacity 0.15s,transform 0.1s;font-family:inherit;}
 .btn:active{opacity:0.75;transform:scale(0.96);}
 .btn-primary{background:var(--yellow);color:#111;}
 .btn-ghost{background:var(--surface2);color:var(--text);}
 .btn-danger{background:#3a1212;color:#ff6b6b;}
 .btn-sm{padding:7px 13px;font-size:0.78rem;border-radius:8px;}
-.btn-full{width:100%;justify-content:center;padding:14px;font-size:1rem;}
+.btn-full{width:100%;padding:14px;font-size:1rem;}
 .form-group{margin-bottom:14px;}
 .form-label{font-size:0.78rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px;display:block;}
 input[type=text],input[type=number]{width:100%;padding:12px 14px;background:var(--surface2);border:1.5px solid var(--border);border-radius:12px;color:var(--text);font-size:1rem;font-family:inherit;outline:none;transition:border-color 0.15s;-webkit-appearance:none;}
 input:focus{border-color:var(--yellow);}
 .input-row{display:flex;gap:8px;align-items:center;}.input-row input{flex:1;}
-.ai-pill{display:none;background:rgba(245,197,24,0.12);border:1px solid rgba(245,197,24,0.3);border-radius:30px;padding:8px 14px;font-size:0.82rem;color:var(--yellow);align-items:center;gap:8px;margin-bottom:12px;}
-.ai-pill.show{display:flex;}
 .item-list{list-style:none;display:flex;flex-direction:column;gap:6px;}
 .item-list li{display:flex;align-items:center;gap:10px;background:var(--surface2);border-radius:10px;padding:10px 12px;font-size:0.88rem;}
 .item-list .del{margin-left:auto;background:none;border:none;color:var(--muted);font-size:1.1rem;cursor:pointer;padding:2px 6px;}
@@ -76,7 +74,6 @@ input:focus{border-color:var(--yellow);}
 .qr-label h3{font-size:1.2rem;font-weight:900;margin-bottom:2px;}
 .qr-sublabel{font-size:0.9rem;font-weight:700;color:#333;margin-bottom:10px;}
 .qr-items-preview{font-size:0.72rem;color:#555;line-height:1.5;}
-#qr-canvas{margin:0 auto 10px;}
 .empty{text-align:center;padding:50px 20px;color:var(--muted);}
 .empty .eicon{font-size:3.5rem;margin-bottom:12px;}
 .empty p{font-size:0.9rem;line-height:1.5;}
@@ -84,33 +81,28 @@ input:focus{border-color:var(--yellow);}
 .spinner{width:14px;height:14px;border-radius:50%;border:2px solid rgba(245,197,24,0.3);border-top-color:var(--yellow);animation:spin 0.7s linear infinite;flex-shrink:0;}
 @keyframes spin{to{transform:rotate(360deg);}}
 
-/* ── ADD METHODS ── */
-.add-methods{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;}
-.add-method-btn{background:var(--surface2);border:1.5px solid var(--border);border-radius:12px;padding:12px 6px;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;color:var(--text);font-family:inherit;transition:border-color 0.15s,background 0.15s;}
-.add-method-btn:active{border-color:var(--yellow);background:rgba(245,197,24,0.08);}
-.add-method-btn .micon{font-size:1.5rem;}
-.add-method-btn .mlabel{font-size:0.68rem;font-weight:700;color:var(--muted);text-align:center;line-height:1.2;}
+/* ── ADD METHOD TABS ── */
+.method-tabs{display:flex;gap:6px;margin-bottom:14px;}
+.method-tab{flex:1;padding:9px 4px;border:1.5px solid var(--border);border-radius:10px;background:var(--surface2);color:var(--muted);font-size:0.7rem;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;font-family:inherit;transition:all 0.15s;}
+.method-tab .micon{font-size:1.3rem;}
+.method-tab.active{border-color:var(--yellow);color:var(--yellow);background:rgba(245,197,24,0.08);}
+.method-panel{display:none;}.method-panel.active{display:block;}
 
-/* ── BARCODE SCANNER ── */
-.scan-modal{display:none;position:fixed;inset:0;background:#000;z-index:300;flex-direction:column;}
-.scan-modal.open{display:flex;}
-.scan-header{padding:calc(var(--safe-top) + 8px) 16px 12px;background:rgba(0,0,0,0.8);display:flex;align-items:center;gap:12px;flex-shrink:0;}
-.scan-header h2{font-size:1rem;font-weight:700;color:#fff;flex:1;}
-.scan-viewport{position:relative;flex:1;overflow:hidden;display:flex;align-items:center;justify-content:center;}
-#scan-video{width:100%;height:100%;object-fit:cover;}
-.scan-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;}
-.scan-frame{width:75%;max-width:300px;aspect-ratio:2.2/1;border:3px solid var(--yellow);border-radius:14px;box-shadow:0 0 0 2000px rgba(0,0,0,0.52);position:relative;}
-.scan-corners::before,.scan-corners::after{content:'';position:absolute;width:20px;height:20px;border-color:var(--yellow);border-style:solid;}
-.scan-laser{position:absolute;left:5%;right:5%;top:50%;height:2px;background:linear-gradient(90deg,transparent,var(--yellow),transparent);box-shadow:0 0 6px var(--yellow);animation:laser 1.6s ease-in-out infinite;}
-@keyframes laser{0%,100%{top:15%;}50%{top:82%;}}
-.scan-hint{color:#fff;font-size:0.8rem;margin-top:20px;background:rgba(0,0,0,0.55);padding:6px 16px;border-radius:20px;font-weight:600;}
-.scan-footer{padding:14px 16px calc(var(--safe-bottom) + 10px);background:rgba(0,0,0,0.85);flex-shrink:0;}
-.scan-result-box{background:var(--surface);border-radius:12px;padding:12px 14px;margin-bottom:10px;border:1.5px solid var(--border);display:none;}
-.scan-result-box.show{display:block;}
-.scan-result-box.found{border-color:var(--yellow);}
-.srb-name{font-weight:700;font-size:0.95rem;color:var(--text);margin-bottom:2px;}
-.srb-upc{font-size:0.72rem;color:var(--muted);}
-.scan-btns{display:flex;gap:8px;}
+/* ── VOICE RECORDER ── */
+.voice-area{text-align:center;padding:10px 0 6px;}
+.mic-btn{width:86px;height:86px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:2.2rem;margin:0 auto 14px;transition:all 0.2s;background:var(--surface2);border:3px solid var(--border);}
+.mic-btn.listening{background:rgba(231,76,60,0.15);border-color:#e74c3c;animation:micPulse 1.2s ease-in-out infinite;}
+.mic-btn.processing{background:rgba(245,197,24,0.1);border-color:var(--yellow);}
+@keyframes micPulse{0%,100%{box-shadow:0 0 0 0 rgba(231,76,60,0.4);}50%{box-shadow:0 0 0 14px rgba(231,76,60,0);}}
+.voice-status{font-size:0.88rem;color:var(--muted);margin-bottom:12px;min-height:20px;}
+.voice-status.active{color:var(--yellow);}
+.voice-transcript{background:var(--surface2);border:1.5px solid var(--border);border-radius:12px;padding:12px 14px;font-size:0.9rem;min-height:52px;color:var(--text);line-height:1.5;margin-bottom:10px;text-align:left;font-style:italic;}
+.voice-transcript.has-text{font-style:normal;border-color:var(--yellow);}
+.voice-hint{font-size:0.75rem;color:var(--muted);line-height:1.5;margin-bottom:10px;}
+
+/* ── AI PHOTO ── */
+.ai-pill{display:none;background:rgba(245,197,24,0.12);border:1px solid rgba(245,197,24,0.3);border-radius:30px;padding:8px 14px;font-size:0.82rem;color:var(--yellow);align-items:center;gap:8px;margin-bottom:12px;}
+.ai-pill.show{display:flex;}
 
 @media print{body *{visibility:hidden !important;}.qr-label,.qr-label *{visibility:visible !important;}.qr-label{position:fixed;inset:0;border-radius:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}}
 </style>
@@ -120,7 +112,7 @@ input:focus{border-color:var(--yellow);}
   <div class="status-bar-spacer"></div>
   <div class="topbar">
     <h1>📦 Tote Organizer</h1>
-    <div class="subtitle">Barcode scan · AI photo · QR labels</div>
+    <div class="subtitle">Voice · AI photo · QR labels</div>
   </div>
   <div class="page-scroll">
 
@@ -145,32 +137,61 @@ input:focus{border-color:var(--yellow);}
           <label class="form-label">Tote Name / Label</label>
           <input type="text" id="new-name" placeholder="e.g. Garden Tools, Holiday Lights…">
         </div>
+
         <div class="form-group">
           <label class="form-label">Add Items</label>
-          <div class="add-methods">
-            <button class="add-method-btn" onclick="startBarcodeScanner()">
-              <span class="micon">📷</span>
-              <span class="mlabel">Scan<br>Barcode</span>
+
+          <!-- Method tabs -->
+          <div class="method-tabs">
+            <button class="method-tab active" id="tab-voice" onclick="switchMethod('voice')">
+              <span class="micon">🎙️</span>Voice
             </button>
-            <button class="add-method-btn" onclick="document.getElementById('photo-input').click()">
-              <span class="micon">🖼️</span>
-              <span class="mlabel">AI Photo<br>Scan</span>
+            <button class="method-tab" id="tab-photo" onclick="switchMethod('photo')">
+              <span class="micon">🖼️</span>AI Photo
             </button>
-            <button class="add-method-btn" onclick="document.getElementById('item-input').focus()">
-              <span class="micon">⌨️</span>
-              <span class="mlabel">Type<br>Item</span>
+            <button class="method-tab" id="tab-type" onclick="switchMethod('type')">
+              <span class="micon">⌨️</span>Type
             </button>
           </div>
-          <input type="file" accept="image/*" id="photo-input" style="display:none;" onchange="handlePhoto(this)">
-          <div id="photo-thumb" style="display:none;margin-bottom:10px;">
-            <img id="photo-preview" style="width:100%;max-height:140px;object-fit:cover;border-radius:10px;">
+
+          <!-- VOICE PANEL -->
+          <div class="method-panel active" id="panel-voice">
+            <div class="voice-area">
+              <button class="mic-btn" id="mic-btn" onclick="toggleVoice()">🎙️</button>
+              <div class="voice-status" id="voice-status">Tap the mic and read off what's in the tote</div>
+              <div class="voice-transcript" id="voice-transcript">Your words will appear here…</div>
+              <div class="voice-hint">💡 Say items naturally, e.g. "extension cord, garden gloves, and a bag of mulch".<br>Tap mic again when done — AI will split into individual items.</div>
+              <button class="btn btn-primary btn-full" id="voice-parse-btn" style="display:none;" onclick="parseVoiceItems()">
+                ✨ Add Items from Speech
+              </button>
+            </div>
           </div>
-          <div class="ai-pill" id="ai-pill"><div class="spinner"></div><span id="ai-msg">Analyzing…</span></div>
-          <div class="input-row" style="margin-bottom:10px;">
-            <input type="text" id="item-input" placeholder="Type an item name…" onkeydown="if(event.key==='Enter'){addNewItem();this.focus();}">
-            <button class="btn btn-ghost btn-sm" onclick="addNewItem()">Add</button>
+
+          <!-- AI PHOTO PANEL -->
+          <div class="method-panel" id="panel-photo">
+            <input type="file" accept="image/*" id="photo-input" style="display:none;" onchange="handlePhoto(this)">
+            <div id="photo-thumb" style="display:none;margin-bottom:10px;">
+              <img id="photo-preview" style="width:100%;max-height:150px;object-fit:cover;border-radius:10px;">
+            </div>
+            <div class="ai-pill" id="ai-pill"><div class="spinner"></div><span id="ai-msg">Analyzing…</span></div>
+            <button class="btn btn-ghost btn-full" onclick="document.getElementById('photo-input').click()" style="margin-bottom:8px;">
+              📷 Take or Upload Photo
+            </button>
+            <div class="voice-hint" style="margin-top:4px;">AI will identify every item it can see in the photo.</div>
           </div>
-          <ul class="item-list" id="new-item-list"></ul>
+
+          <!-- TYPE PANEL -->
+          <div class="method-panel" id="panel-type">
+            <div class="input-row" style="margin-bottom:8px;">
+              <input type="text" id="item-input" placeholder="Type an item name…" onkeydown="if(event.key==='Enter'){addNewItem();this.focus();}">
+              <button class="btn btn-ghost btn-sm" onclick="addNewItem()">Add</button>
+            </div>
+          </div>
+
+          <!-- Shared item list (all methods add here) -->
+          <div style="margin-top:4px;">
+            <ul class="item-list" id="new-item-list"></ul>
+          </div>
         </div>
       </div>
       <button class="btn btn-primary btn-full" onclick="saveTote()">💾 Save &amp; Generate QR Code</button>
@@ -190,39 +211,12 @@ input:focus{border-color:var(--yellow);}
       <div id="lookup-result"></div>
     </div>
 
-  </div><!-- /page-scroll -->
+  </div>
 
   <div class="tab-bar">
     <button class="tab active" id="tab-totes" onclick="showPage('totes')"><span class="icon">🗂️</span>Totes</button>
     <button class="tab" id="tab-add" onclick="showPage('add')"><span class="icon">➕</span>Add</button>
     <button class="tab" id="tab-scan" onclick="showPage('scan')"><span class="icon">🔍</span>Lookup</button>
-  </div>
-</div>
-
-<!-- BARCODE SCANNER MODAL -->
-<div class="scan-modal" id="scan-modal">
-  <div class="scan-header">
-    <h2>📷 Scan Barcode</h2>
-    <button class="btn btn-ghost btn-sm" onclick="stopBarcodeScanner()">✕ Close</button>
-  </div>
-  <div class="scan-viewport">
-    <video id="scan-video" autoplay playsinline muted></video>
-    <div class="scan-overlay">
-      <div class="scan-frame">
-        <div class="scan-laser"></div>
-      </div>
-      <div class="scan-hint" id="scan-hint">Point at a barcode</div>
-    </div>
-  </div>
-  <div class="scan-footer">
-    <div class="scan-result-box" id="scan-result-box">
-      <div class="srb-name" id="srb-name"></div>
-      <div class="srb-upc" id="srb-upc"></div>
-    </div>
-    <div class="scan-btns">
-      <button class="btn btn-primary" id="scan-add-btn" style="flex:1;display:none;" onclick="addScannedItem()">➕ Add to Tote</button>
-      <button class="btn btn-ghost" style="flex:1;" onclick="stopBarcodeScanner()">Done</button>
-    </div>
   </div>
 </div>
 
@@ -235,18 +229,14 @@ input:focus{border-color:var(--yellow);}
   </div>
 </div>
 
-<script src="quagga.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
 // ─── STATE ───
 let totes = JSON.parse(localStorage.getItem('shed-totes') || '[]');
 let newItems = [];
-let currentPhotoBase64 = null;
-let currentMime = 'image/jpeg';
-let scanStream = null;
-let lastScannedCode = null;
-let lastScannedName = null;
-let scanCooldown = false;
+let recognition = null;
+let isListening = false;
+let fullTranscript = '';
 
 function persist() { localStorage.setItem('shed-totes', JSON.stringify(totes)); }
 
@@ -258,6 +248,16 @@ function showPage(name) {
     document.getElementById('tab-'+p).classList.toggle('active', p===name);
   });
   if (name === 'totes') renderTotes();
+  if (name !== 'add') stopVoice();
+}
+
+// ─── METHOD TABS ───
+function switchMethod(name) {
+  ['voice','photo','type'].forEach(m => {
+    document.getElementById('tab-'+m).classList.toggle('active', m===name);
+    document.getElementById('panel-'+m).classList.toggle('active', m===name);
+  });
+  if (name !== 'voice') stopVoice();
 }
 
 // ─── RENDER TOTES ───
@@ -289,142 +289,166 @@ function renderTotes(filter='') {
 }
 function filterTotes(v) { renderTotes(v); }
 
-// ─── BARCODE SCANNER ───
-async function startBarcodeScanner() {
-  const modal = document.getElementById('scan-modal');
-  document.getElementById('scan-result-box').className = 'scan-result-box';
-  document.getElementById('scan-add-btn').style.display = 'none';
-  document.getElementById('scan-hint').textContent = 'Point at a barcode';
-  lastScannedCode = null; lastScannedName = null; scanCooldown = false;
-
-  try {
-    scanStream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } }
-    });
-    document.getElementById('scan-video').srcObject = scanStream;
-    modal.classList.add('open');
-
-    Quagga.init({
-      inputStream: {
-        name: 'Live', type: 'LiveStream',
-        target: document.getElementById('scan-video'),
-        constraints: { facingMode: 'environment' }
-      },
-      decoder: {
-        readers: ['ean_reader','upc_reader','upc_e_reader','ean_8_reader','code_128_reader','code_39_reader']
-      },
-      locate: true, numOfWorkers: 0, frequency: 10
-    }, err => {
-      if (err) { console.warn('Quagga init error:', err); return; }
-      Quagga.start();
-    });
-
-    Quagga.onDetected(async result => {
-      const code = result.codeResult.code;
-      if (!code || scanCooldown || code === lastScannedCode) return;
-      scanCooldown = true;
-      lastScannedCode = code;
-      document.getElementById('scan-hint').textContent = '🔍 Looking up…';
-      if (navigator.vibrate) navigator.vibrate(80);
-      await lookupUPC(code);
-      setTimeout(() => { scanCooldown = false; }, 3000);
-    });
-
-  } catch(e) {
-    alert('Camera access needed. In Safari: Settings → Privacy & Security → Camera → allow this site.');
+// ─── VOICE INPUT ───
+function toggleVoice() {
+  if (isListening) {
+    stopVoice();
+  } else {
+    startVoice();
   }
 }
 
-async function lookupUPC(upc) {
-  const box = document.getElementById('scan-result-box');
-  const nameEl = document.getElementById('srb-name');
-  const upcEl = document.getElementById('srb-upc');
-  const addBtn = document.getElementById('scan-add-btn');
+function startVoice() {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    alert('Voice input is not supported in this browser. Try Safari on iPhone (iOS 14.5+) or Chrome.');
+    return;
+  }
 
-  nameEl.textContent = '🔍 Looking up product…';
-  upcEl.textContent = 'UPC: ' + upc;
-  box.className = 'scan-result-box show';
-  addBtn.style.display = 'none';
+  recognition = new SpeechRecognition();
+  recognition.continuous = true;       // keep listening until tapped again
+  recognition.interimResults = true;   // show words as they're spoken
+  recognition.lang = 'en-US';
 
-  // Try Open Food Facts first (great for grocery/household)
-  try {
-    const r = await fetch(`https://world.openfoodfacts.org/api/v2/product/${upc}.json?fields=product_name,brands,quantity`);
-    const d = await r.json();
-    if (d.status === 1 && d.product && d.product.product_name) {
-      const p = d.product;
-      const name = [p.product_name, p.brands, p.quantity].filter(Boolean).join(' — ');
-      setScannedResult(name, upc, box, nameEl, upcEl, addBtn);
-      return;
+  fullTranscript = '';
+
+  recognition.onstart = () => {
+    isListening = true;
+    const btn = document.getElementById('mic-btn');
+    btn.textContent = '⏹️';
+    btn.className = 'mic-btn listening';
+    setVoiceStatus('🎙️ Listening… say what\'s in the tote', true);
+    document.getElementById('voice-transcript').textContent = '';
+    document.getElementById('voice-transcript').className = 'voice-transcript';
+    document.getElementById('voice-parse-btn').style.display = 'none';
+  };
+
+  recognition.onresult = (e) => {
+    let interim = '';
+    let final = '';
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      const t = e.results[i][0].transcript;
+      if (e.results[i].isFinal) final += t + ' ';
+      else interim += t;
     }
-  } catch(e) {}
+    fullTranscript += final;
+    const display = fullTranscript + interim;
+    const el = document.getElementById('voice-transcript');
+    el.textContent = display || 'Listening…';
+    el.className = 'voice-transcript' + (display ? ' has-text' : '');
+  };
 
-  // Fallback: UPC Item DB
-  try {
-    const r2 = await fetch(`https://api.upcitemdb.com/prod/trial/lookup?upc=${upc}`);
-    const d2 = await r2.json();
-    if (d2.items && d2.items.length && d2.items[0].title) {
-      setScannedResult(d2.items[0].title, upc, box, nameEl, upcEl, addBtn);
-      return;
+  recognition.onerror = (e) => {
+    if (e.error === 'not-allowed') {
+      alert('Microphone access denied. Go to Settings → Safari → Microphone and allow access.');
+    } else if (e.error !== 'no-speech') {
+      setVoiceStatus('⚠️ Error: ' + e.error + '. Tap mic to try again.', false);
     }
-  } catch(e) {}
+    stopVoice(false);
+  };
 
-  // Not found — allow adding with raw UPC
-  lastScannedName = 'Item ' + upc;
-  nameEl.textContent = '⚠️ Product not in database';
-  upcEl.textContent = 'UPC: ' + upc + ' — tap Add to save anyway';
-  addBtn.style.display = 'flex';
-  addBtn.textContent = '➕ Add as Unknown Item';
-  document.getElementById('scan-hint').textContent = 'Point at a barcode';
+  recognition.onend = () => {
+    // Auto-stopped (e.g. silence timeout) — show parse button if we got something
+    if (isListening) {
+      isListening = false;
+      finishListening();
+    }
+  };
+
+  recognition.start();
 }
 
-function setScannedResult(name, upc, box, nameEl, upcEl, addBtn) {
-  lastScannedName = name;
-  nameEl.textContent = '✅ ' + name;
-  upcEl.textContent = 'UPC: ' + upc;
-  box.className = 'scan-result-box show found';
-  addBtn.style.display = 'flex';
-  addBtn.textContent = '➕ Add to Tote';
-  document.getElementById('scan-hint').textContent = 'Point at a barcode';
+function stopVoice(finish = true) {
+  if (recognition) {
+    try { recognition.stop(); } catch(e) {}
+    recognition = null;
+  }
+  if (isListening) {
+    isListening = false;
+    if (finish) finishListening();
+  }
 }
 
-function addScannedItem() {
-  if (!lastScannedName) return;
-  if (!newItems.includes(lastScannedName)) {
-    newItems.push(lastScannedName);
+function finishListening() {
+  const btn = document.getElementById('mic-btn');
+  btn.textContent = '🎙️';
+  btn.className = 'mic-btn';
+  const transcript = fullTranscript.trim();
+  if (transcript) {
+    setVoiceStatus('✅ Got it! Tap the button below to add items.', true);
+    document.getElementById('voice-transcript').className = 'voice-transcript has-text';
+    document.getElementById('voice-transcript').textContent = transcript;
+    document.getElementById('voice-parse-btn').style.display = 'flex';
+  } else {
+    setVoiceStatus('Tap the mic and read off what\'s in the tote', false);
+    document.getElementById('voice-transcript').textContent = 'Your words will appear here…';
+    document.getElementById('voice-transcript').className = 'voice-transcript';
+  }
+}
+
+function setVoiceStatus(msg, active) {
+  const el = document.getElementById('voice-status');
+  el.textContent = msg;
+  el.className = 'voice-status' + (active ? ' active' : '');
+}
+
+async function parseVoiceItems() {
+  const transcript = document.getElementById('voice-transcript').textContent.trim();
+  if (!transcript) return;
+
+  const btn = document.getElementById('voice-parse-btn');
+  btn.textContent = '✨ Processing…';
+  btn.disabled = true;
+  setVoiceStatus('🤖 AI is splitting your speech into items…', true);
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 500,
+        messages: [{
+          role: 'user',
+          content: 'Someone spoke aloud the contents of a shed storage tote. Parse their speech into a clean list of individual items. Fix any obvious speech-to-text errors. Return ONLY a JSON array of short item name strings, no markdown, no explanation.\n\nSpeech: "' + transcript + '"'
+        }]
+      })
+    });
+    const data = await res.json();
+    const text = (data.content.find(b=>b.type==='text')?.text||'[]').replace(/```json|```/g,'').trim();
+    let items;
+    try { items = JSON.parse(text); } catch { items = []; }
+
+    items.forEach(i => { const v = String(i).trim(); if (v && !newItems.includes(v)) newItems.push(v); });
+    renderNewItems();
+    setVoiceStatus('✅ Added '+items.length+' item'+(items.length!==1?'s':'')+' — tap mic to add more!', false);
+
+    // Reset voice area for another round
+    fullTranscript = '';
+    document.getElementById('voice-transcript').textContent = 'Your words will appear here…';
+    document.getElementById('voice-transcript').className = 'voice-transcript';
+    btn.style.display = 'none';
+  } catch(e) {
+    setVoiceStatus('⚠️ Couldn\'t process — items added as-is.', false);
+    // Fallback: add raw transcript as one item
+    if (transcript && !newItems.includes(transcript)) newItems.push(transcript);
     renderNewItems();
   }
-  const btn = document.getElementById('scan-add-btn');
-  btn.textContent = '✓ Added!';
-  btn.style.background = '#27ae60'; btn.style.color = '#fff';
-  setTimeout(() => {
-    btn.textContent = '➕ Add to Tote';
-    btn.style.background = ''; btn.style.color = '';
-    document.getElementById('scan-result-box').className = 'scan-result-box';
-    btn.style.display = 'none';
-    lastScannedCode = null; lastScannedName = null; scanCooldown = false;
-    document.getElementById('scan-hint').textContent = 'Point at a barcode';
-  }, 1200);
+
+  btn.textContent = '✨ Add Items from Speech';
+  btn.disabled = false;
 }
 
-function stopBarcodeScanner() {
-  try { Quagga.stop(); } catch(e) {}
-  if (scanStream) { scanStream.getTracks().forEach(t => t.stop()); scanStream = null; }
-  document.getElementById('scan-modal').classList.remove('open');
-  document.getElementById('scan-video').srcObject = null;
-  lastScannedCode = null; scanCooldown = false;
-}
-
-// ─── AI PHOTO SCAN ───
+// ─── AI PHOTO ───
 function handlePhoto(input) {
   const file = input.files[0]; if (!file) return;
-  currentMime = file.type || 'image/jpeg';
+  const mime = file.type || 'image/jpeg';
   const reader = new FileReader();
   reader.onload = e => {
     const src = e.target.result;
-    currentPhotoBase64 = src.split(',')[1];
     document.getElementById('photo-preview').src = src;
     document.getElementById('photo-thumb').style.display = 'block';
-    scanPhoto(currentPhotoBase64, currentMime);
+    scanPhoto(src.split(',')[1], mime);
   };
   reader.readAsDataURL(file);
 }
@@ -451,7 +475,7 @@ async function scanPhoto(b64, mime) {
     let items; try { items = JSON.parse(text); } catch { items = []; }
     items.forEach(i => { if (!newItems.includes(i)) newItems.push(i); });
     renderNewItems();
-    msg.textContent = '✅ Found '+items.length+' item'+(items.length!==1?'s':'')+' — edit or add more.';
+    msg.textContent = '✅ Found '+items.length+' item'+(items.length!==1?'s':'')+'.';
   } catch {
     msg.textContent = '⚠️ Couldn\'t analyze photo — add items manually.';
   }
@@ -465,23 +489,31 @@ function addNewItem() {
 }
 function removeNewItem(i) { newItems.splice(i,1); renderNewItems(); }
 function renderNewItems() {
-  document.getElementById('new-item-list').innerHTML = newItems.map((item,i)=>
-    '<li>📦 '+esc(item)+'<button class="del" onclick="removeNewItem('+i+')">✕</button></li>'
-  ).join('');
+  const ul = document.getElementById('new-item-list');
+  ul.innerHTML = newItems.length
+    ? newItems.map((item,i)=>'<li>📦 '+esc(item)+'<button class="del" onclick="removeNewItem('+i+')">✕</button></li>').join('')
+    : '';
 }
 
 function saveTote() {
   const name = document.getElementById('new-name').value.trim();
   if (!name) { alert('Give this tote a name first!'); return; }
+  if (!newItems.length) { alert('Add at least one item first!'); return; }
   const id = totes.length ? Math.max(...totes.map(t=>t.id))+1 : 1;
   totes.push({ id, name, items: [...newItems], created: new Date().toLocaleDateString() });
   persist();
+  // reset
   document.getElementById('new-name').value = '';
   document.getElementById('photo-thumb').style.display = 'none';
   document.getElementById('photo-input').value = '';
   document.getElementById('ai-pill').classList.remove('show');
-  newItems = []; currentPhotoBase64 = null;
+  document.getElementById('voice-transcript').textContent = 'Your words will appear here…';
+  document.getElementById('voice-transcript').className = 'voice-transcript';
+  document.getElementById('voice-parse-btn').style.display = 'none';
+  setVoiceStatus('Tap the mic and read off what\'s in the tote', false);
+  fullTranscript = ''; newItems = [];
   renderNewItems();
+  switchMethod('voice');
   showPage('totes');
   setTimeout(() => openQR(id), 350);
 }
@@ -539,17 +571,18 @@ function openQR(id) {
       '<div class="qr-items-preview">'+t.items.slice(0,8).map(esc).join(' · ')+'</div>'+
       '<div style="font-size:0.65rem;color:#888;margin-top:6px;">Scan to view contents</div>'+
     '</div>'+
-    '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;">'+
+    '<div style="display:flex;gap:10px;margin-bottom:12px;">'+
       '<button class="btn btn-primary btn-sm" onclick="window.print()">🖨️ Print Label</button>'+
       '<button class="btn btn-ghost btn-sm" onclick="openDetail('+id+')">← Back</button>'+
     '</div>'+
     '<button class="btn btn-ghost btn-full" onclick="closeSheet()">Done</button>';
   document.getElementById('detail-sheet').classList.add('open');
   setTimeout(() => {
-    const container = document.getElementById('qr-canvas');
-    const canvas = document.createElement('canvas');
-    container.appendChild(canvas);
-    new QRCode(container, { text: url, width: 160, height: 160, colorDark: '#000', colorLight: '#fff', correctLevel: QRCode.CorrectLevel.M });
+    new QRCode(document.getElementById('qr-canvas'), {
+      text: url, width: 160, height: 160,
+      colorDark: '#000', colorLight: '#fff',
+      correctLevel: QRCode.CorrectLevel.M
+    });
   }, 80);
 }
 
@@ -578,7 +611,7 @@ function doLookup() {
 // ─── UTILS ───
 function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-// ─── URL PARAM (QR scan open) ───
+// ─── INIT ───
 window.addEventListener('load', () => {
   const p = new URLSearchParams(window.location.search);
   if (p.get('tote')) {
@@ -589,8 +622,6 @@ window.addEventListener('load', () => {
     renderTotes();
   }
 });
-
-// ─── SERVICE WORKER ───
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('./sw.js').catch(()=>{});
 }
