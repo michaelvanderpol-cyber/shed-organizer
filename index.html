@@ -25,7 +25,13 @@ html,body{height:100%;width:100%;background:var(--bg);color:var(--text);font-fam
 .status-bar-spacer{height:var(--safe-top);background:var(--yellow);flex-shrink:0;}
 .topbar{background:linear-gradient(135deg,var(--yellow),var(--yellow-dark));padding:10px 18px 14px;flex-shrink:0;}
 .topbar h1{font-size:1.25rem;font-weight:800;color:#111;}
+.topbar-row{display:flex;align-items:center;justify-content:space-between;}
 .topbar .subtitle{font-size:0.75rem;color:#444;margin-top:1px;}
+.sync-dot{width:8px;height:8px;border-radius:50%;background:#888;flex-shrink:0;transition:background 0.3s;}
+.sync-dot.online{background:#27ae60;}
+.sync-dot.syncing{background:var(--yellow);animation:pulse 0.8s infinite;}
+.sync-dot.error{background:#e74c3c;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
 .page-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 16px calc(var(--tab-h) + var(--safe-bottom) + 16px);}
 .tab-bar{position:fixed;bottom:0;left:0;right:0;height:calc(var(--tab-h) + var(--safe-bottom));padding-bottom:var(--safe-bottom);background:var(--surface);border-top:1px solid var(--border);display:flex;z-index:50;}
 .tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;padding-top:6px;color:var(--muted);font-size:0.65rem;font-weight:600;border:none;background:none;}
@@ -84,67 +90,62 @@ input:focus{border-color:var(--yellow);}
 @keyframes spin{to{transform:rotate(360deg);}}
 .ai-pill{display:none;background:rgba(245,197,24,0.12);border:1px solid rgba(245,197,24,0.3);border-radius:30px;padding:8px 14px;font-size:0.82rem;color:var(--yellow);align-items:center;gap:8px;margin-bottom:12px;}
 .ai-pill.show{display:flex;}
-
-/* ── METHOD TABS ── */
 .method-tabs{display:flex;gap:6px;margin-bottom:14px;}
 .method-tab{flex:1;padding:9px 4px;border:1.5px solid var(--border);border-radius:10px;background:var(--surface2);color:var(--muted);font-size:0.7rem;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;font-family:inherit;transition:all 0.15s;}
 .method-tab .micon{font-size:1.3rem;}
 .method-tab.active{border-color:var(--yellow);color:var(--yellow);background:rgba(245,197,24,0.08);}
 .method-panel{display:none;}.method-panel.active{display:block;}
-
-/* ── VOICE UI ── */
 .voice-center{display:flex;flex-direction:column;align-items:center;padding:8px 0 12px;}
-
-.mic-ring{
-  width:96px;height:96px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  margin-bottom:14px;cursor:pointer;
-  border:3px solid var(--border);
-  background:var(--surface2);
-  transition:all 0.2s;
-  position:relative;
-}
+.mic-ring{width:96px;height:96px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:14px;cursor:pointer;border:3px solid var(--border);background:var(--surface2);transition:all 0.2s;position:relative;}
 .mic-ring .mic-icon{font-size:2.4rem;line-height:1;pointer-events:none;}
 .mic-ring.listening{border-color:#e74c3c;background:rgba(231,76,60,0.12);}
-.mic-ring.listening::before{
-  content:'';position:absolute;inset:-8px;border-radius:50%;
-  border:2px solid rgba(231,76,60,0.4);
-  animation:ripple 1.4s ease-out infinite;
-}
-.mic-ring.listening::after{
-  content:'';position:absolute;inset:-16px;border-radius:50%;
-  border:2px solid rgba(231,76,60,0.2);
-  animation:ripple 1.4s ease-out 0.4s infinite;
-}
+.mic-ring.listening::before{content:'';position:absolute;inset:-8px;border-radius:50%;border:2px solid rgba(231,76,60,0.4);animation:ripple 1.4s ease-out infinite;}
+.mic-ring.listening::after{content:'';position:absolute;inset:-16px;border-radius:50%;border:2px solid rgba(231,76,60,0.2);animation:ripple 1.4s ease-out 0.4s infinite;}
 @keyframes ripple{0%{opacity:1;transform:scale(0.9);}100%{opacity:0;transform:scale(1.25);}}
-
 .voice-label{font-size:0.88rem;font-weight:700;color:var(--muted);margin-bottom:6px;text-align:center;}
 .voice-label.active{color:var(--yellow);}
-
-/* live transcript bubble */
-.live-bubble{
-  width:100%;background:var(--surface2);border:1.5px solid var(--border);
-  border-radius:12px;padding:11px 14px;min-height:44px;
-  font-size:0.9rem;color:var(--muted);font-style:italic;
-  line-height:1.4;margin-bottom:10px;transition:border-color 0.2s;
-}
+.live-bubble{width:100%;background:var(--surface2);border:1.5px solid var(--border);border-radius:12px;padding:11px 14px;min-height:44px;font-size:0.9rem;color:var(--muted);font-style:italic;line-height:1.4;margin-bottom:10px;transition:border-color 0.2s;}
 .live-bubble.speaking{border-color:var(--yellow);color:var(--text);font-style:normal;}
-
 .voice-hint{font-size:0.74rem;color:var(--muted);text-align:center;line-height:1.5;padding:0 4px;}
+
+/* setup screen */
+.setup-screen{position:fixed;inset:0;background:var(--bg);z-index:400;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px 24px;}
+.setup-screen.hidden{display:none;}
+.setup-logo{font-size:3.5rem;margin-bottom:12px;}
+.setup-screen h2{font-size:1.3rem;font-weight:800;margin-bottom:8px;text-align:center;}
+.setup-screen p{font-size:0.85rem;color:var(--muted);text-align:center;line-height:1.6;margin-bottom:24px;}
+.setup-screen input{margin-bottom:12px;}
+.setup-error{color:#ff6b6b;font-size:0.8rem;margin-bottom:10px;display:none;}
 
 @media print{body *{visibility:hidden !important;}.qr-label,.qr-label *{visibility:visible !important;}.qr-label{position:fixed;inset:0;border-radius:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}}
 </style>
 </head>
 <body>
+
+<!-- SETUP SCREEN — shown until Firebase is configured -->
+<div class="setup-screen" id="setup-screen">
+  <div class="setup-logo">📦</div>
+  <h2>Tote Organizer Setup</h2>
+  <p>To sync between phones, enter your Firebase Database URL below. Only takes 2 minutes to set up — see instructions in the README on GitHub.</p>
+  <input type="text" id="setup-url" placeholder="https://your-project-default-rtdb.firebaseio.com" style="font-size:0.85rem;">
+  <div class="setup-error" id="setup-error">Could not connect — check the URL and try again.</div>
+  <button class="btn btn-primary btn-full" onclick="saveSetup()">Connect &amp; Start</button>
+  <p style="margin-top:16px;font-size:0.75rem;color:var(--muted);">
+    Don't want cloud sync? <button onclick="useLocalMode()" style="background:none;border:none;color:var(--yellow);font-size:0.75rem;cursor:pointer;font-weight:700;">Use local storage instead</button>
+  </p>
+</div>
+
 <div id="app">
   <div class="status-bar-spacer"></div>
   <div class="topbar">
-    <h1>📦 Tote Organizer</h1>
-    <div class="subtitle">Voice · AI photo · QR labels · v7</div>
+    <div class="topbar-row">
+      <h1>📦 Tote Organizer</h1>
+      <div class="sync-dot" id="sync-dot" title="Sync status"></div>
+    </div>
+    <div class="subtitle">Voice · AI photo · QR labels · v8</div>
   </div>
   <div class="page-scroll">
 
-    <!-- TOTES PAGE -->
     <div id="page-totes" class="page active">
       <div class="section-hdr">
         <h2>My Totes</h2>
@@ -157,7 +158,6 @@ input:focus{border-color:var(--yellow);}
       <div class="tote-list" id="tote-list"></div>
     </div>
 
-    <!-- ADD PAGE -->
     <div id="page-add" class="page">
       <div class="section-hdr" style="margin-bottom:16px;"><h2>Add New Tote</h2></div>
       <div class="card">
@@ -168,58 +168,39 @@ input:focus{border-color:var(--yellow);}
         <div class="form-group">
           <label class="form-label">Add Items</label>
           <div class="method-tabs">
-            <button class="method-tab active" id="tab-voice" onclick="switchMethod('voice')">
-              <span class="micon">🎙️</span>Voice
-            </button>
-            <button class="method-tab" id="tab-photo" onclick="switchMethod('photo')">
-              <span class="micon">🖼️</span>AI Photo
-            </button>
-            <button class="method-tab" id="tab-type" onclick="switchMethod('type')">
-              <span class="micon">⌨️</span>Type
-            </button>
+            <button class="method-tab active" id="tab-voice" onclick="switchMethod('voice')"><span class="micon">🎙️</span>Voice</button>
+            <button class="method-tab" id="tab-photo" onclick="switchMethod('photo')"><span class="micon">🖼️</span>AI Photo</button>
+            <button class="method-tab" id="tab-type" onclick="switchMethod('type')"><span class="micon">⌨️</span>Type</button>
           </div>
-
-          <!-- VOICE -->
           <div class="method-panel active" id="panel-voice">
             <div class="voice-center">
-              <div class="mic-ring" id="mic-ring" onclick="toggleVoice()">
-                <span class="mic-icon">🎙️</span>
-              </div>
+              <div class="mic-ring" id="mic-ring" onclick="toggleVoice()"><span class="mic-icon">🎙️</span></div>
               <div class="voice-label" id="voice-label">Tap mic, then say each item</div>
               <div class="live-bubble" id="live-bubble">Heard items will appear here as you speak…</div>
-              <div class="voice-hint">Say one item at a time — pause briefly between each.<br>e.g. "extension cord" <em>(pause)</em> "garden gloves" <em>(pause)</em> "rake"</div>
+              <div class="voice-hint">Say one item, pause briefly, it adds automatically.<br>e.g. "extension cord" ⏸ "garden gloves" ⏸ "rake"</div>
             </div>
           </div>
-
-          <!-- AI PHOTO -->
           <div class="method-panel" id="panel-photo">
             <input type="file" accept="image/*" id="photo-input" style="display:none;" onchange="handlePhoto(this)">
             <div id="photo-thumb" style="display:none;margin-bottom:10px;">
               <img id="photo-preview" style="width:100%;max-height:150px;object-fit:cover;border-radius:10px;">
             </div>
             <div class="ai-pill" id="ai-pill"><div class="spinner"></div><span id="ai-msg">Analyzing…</span></div>
-            <button class="btn btn-ghost btn-full" onclick="document.getElementById('photo-input').click()" style="margin-bottom:8px;">
-              📷 Take or Upload Photo
-            </button>
+            <button class="btn btn-ghost btn-full" onclick="document.getElementById('photo-input').click()" style="margin-bottom:8px;">📷 Take or Upload Photo</button>
             <div style="font-size:0.74rem;color:var(--muted);text-align:center;">AI identifies every item it sees in the photo.</div>
           </div>
-
-          <!-- TYPE -->
           <div class="method-panel" id="panel-type">
             <div class="input-row" style="margin-bottom:8px;">
               <input type="text" id="item-input" placeholder="Type an item name…" onkeydown="if(event.key==='Enter'){addNewItem();this.focus();}">
               <button class="btn btn-ghost btn-sm" onclick="addNewItem()">Add</button>
             </div>
           </div>
-
-          <!-- shared list -->
           <ul class="item-list" id="new-item-list" style="margin-top:8px;"></ul>
         </div>
       </div>
       <button class="btn btn-primary btn-full" onclick="saveTote()">💾 Save &amp; Generate QR Code</button>
     </div>
 
-    <!-- LOOKUP PAGE -->
     <div id="page-scan" class="page">
       <div class="section-hdr" style="margin-bottom:16px;"><h2>Look Up Tote</h2></div>
       <div class="card">
@@ -234,7 +215,6 @@ input:focus{border-color:var(--yellow);}
     </div>
 
   </div>
-
   <div class="tab-bar">
     <button class="tab active" id="tab-totes" onclick="showPage('totes')"><span class="icon">🗂️</span>Totes</button>
     <button class="tab" id="tab-add" onclick="showPage('add')"><span class="icon">➕</span>Add</button>
@@ -242,7 +222,6 @@ input:focus{border-color:var(--yellow);}
   </div>
 </div>
 
-<!-- DETAIL SHEET -->
 <div class="sheet-overlay" id="detail-sheet">
   <div class="sheet">
     <div class="sheet-handle"></div>
@@ -253,17 +232,156 @@ input:focus{border-color:var(--yellow);}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
-// ─── STATE ───
-let totes = JSON.parse(localStorage.getItem('shed-totes') || '[]');
+// ─── STORAGE LAYER ───
+// Supports both Firebase (shared) and localStorage (local fallback)
+let useFirebase = false;
+let firebaseUrl = '';
+let totes = [];
 let newItems = [];
 let recognition = null;
 let isListening = false;
-// Accumulate finals between natural speech pauses
 let pendingText = '';
 let pauseTimer = null;
-const PAUSE_MS = 600; // silence = item boundary
+const PAUSE_MS = 600;
 
-function persist() { localStorage.setItem('shed-totes', JSON.stringify(totes)); }
+function setSyncStatus(status) {
+  const dot = document.getElementById('sync-dot');
+  dot.className = 'sync-dot ' + status;
+}
+
+// ─── FIREBASE HELPERS ───
+async function fbGet() {
+  setSyncStatus('syncing');
+  try {
+    const r = await fetch(firebaseUrl + '/totes.json');
+    const data = await r.json();
+    setSyncStatus('online');
+    if (!data) return [];
+    // Firebase returns an object keyed by push ID — convert to array
+    return Object.entries(data).map(([fbKey, t]) => ({ ...t, fbKey }));
+  } catch(e) {
+    setSyncStatus('error');
+    return [];
+  }
+}
+
+async function fbSave(tote) {
+  setSyncStatus('syncing');
+  try {
+    if (tote.fbKey) {
+      // Update existing
+      await fetch(firebaseUrl + '/totes/' + tote.fbKey + '.json', {
+        method: 'PUT',
+        body: JSON.stringify({ id: tote.id, name: tote.name, items: tote.items, created: tote.created })
+      });
+    } else {
+      // New tote — use POST to get a Firebase push key
+      const r = await fetch(firebaseUrl + '/totes.json', {
+        method: 'POST',
+        body: JSON.stringify({ id: tote.id, name: tote.name, items: tote.items, created: tote.created })
+      });
+      const data = await r.json();
+      tote.fbKey = data.name;
+    }
+    setSyncStatus('online');
+    return tote;
+  } catch(e) {
+    setSyncStatus('error');
+    return tote;
+  }
+}
+
+async function fbDelete(tote) {
+  if (!tote.fbKey) return;
+  setSyncStatus('syncing');
+  try {
+    await fetch(firebaseUrl + '/totes/' + tote.fbKey + '.json', { method: 'DELETE' });
+    setSyncStatus('online');
+  } catch(e) { setSyncStatus('error'); }
+}
+
+// ─── LOCAL STORAGE FALLBACK ───
+function localSave() {
+  localStorage.setItem('shed-totes', JSON.stringify(totes));
+}
+
+// ─── UNIFIED PERSIST ───
+async function persist(tote) {
+  if (useFirebase) {
+    await fbSave(tote);
+  } else {
+    localSave();
+  }
+}
+
+async function deleteFromStore(tote) {
+  if (useFirebase) {
+    await fbDelete(tote);
+  } else {
+    localSave();
+  }
+}
+
+async function loadTotes() {
+  if (useFirebase) {
+    totes = await fbGet();
+    // Sort by numeric id
+    totes.sort((a,b) => a.id - b.id);
+  } else {
+    totes = JSON.parse(localStorage.getItem('shed-totes') || '[]');
+  }
+  renderTotes();
+}
+
+// Poll for changes every 10s when using Firebase so both phones stay in sync
+function startPolling() {
+  if (!useFirebase) return;
+  setInterval(async () => {
+    const fresh = await fbGet();
+    fresh.sort((a,b) => a.id - b.id);
+    // Only re-render if something changed
+    if (JSON.stringify(fresh) !== JSON.stringify(totes)) {
+      totes = fresh;
+      renderTotes();
+    }
+  }, 10000);
+}
+
+// ─── SETUP ───
+function saveSetup() {
+  const url = document.getElementById('setup-url').value.trim().replace(/\/$/, '');
+  if (!url.startsWith('https://')) {
+    showSetupError('URL must start with https://');
+    return;
+  }
+  // Test the connection
+  const errEl = document.getElementById('setup-error');
+  errEl.style.display = 'none';
+  fetch(url + '/totes.json')
+    .then(r => { if (!r.ok) throw new Error(); return r.json(); })
+    .then(() => {
+      localStorage.setItem('firebase-url', url);
+      firebaseUrl = url;
+      useFirebase = true;
+      document.getElementById('setup-screen').classList.add('hidden');
+      loadTotes().then(startPolling);
+    })
+    .catch(() => showSetupError('Could not connect — check the URL and try again.'));
+}
+
+function showSetupError(msg) {
+  const el = document.getElementById('setup-error');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+function useLocalMode() {
+  localStorage.setItem('firebase-url', 'local');
+  useFirebase = false;
+  document.getElementById('setup-screen').classList.add('hidden');
+  setSyncStatus('');
+  loadTotes();
+}
 
 // ─── NAV ───
 function showPage(name) {
@@ -272,7 +390,7 @@ function showPage(name) {
     document.getElementById('tab-'+p).classList.toggle('active', p===name);
   });
   if (name !== 'add') stopVoice();
-  if (name === 'totes') renderTotes();
+  if (name === 'totes') loadTotes();
 }
 
 function switchMethod(name) {
@@ -283,7 +401,7 @@ function switchMethod(name) {
   if (name !== 'voice') stopVoice();
 }
 
-// ─── TOTE LIST ───
+// ─── RENDER ───
 function renderTotes(filter='') {
   const list = document.getElementById('tote-list');
   const fl = filter.toLowerCase();
@@ -296,7 +414,7 @@ function renderTotes(filter='') {
     return;
   }
   list.innerHTML = shown.map(t => `
-    <div class="tote-card" onclick="openDetail(${t.id})">
+    <div class="tote-card" onclick="openDetail('${t.fbKey||t.id}')">
       <div class="tote-band">
         <div><div class="tote-num">#${t.id}</div><div class="tote-label">${esc(t.name)}</div></div>
         <div class="tote-badge">${t.items.length} item${t.items.length!==1?'s':''}</div>
@@ -304,116 +422,68 @@ function renderTotes(filter='') {
       <div class="tote-body">
         <div class="tote-preview">${t.items.slice(0,4).map(i=>'• '+esc(i)).join('  ')+(t.items.length>4?'  <em>+'+(t.items.length-4)+' more</em>':'') || '<em>No items yet</em>'}</div>
         <div class="tote-actions">
-          <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();openQR(${t.id})">🖨️ QR Label</button>
-          <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();openDetail(${t.id})">✏️ Edit</button>
+          <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();openQR('${t.fbKey||t.id}')">🖨️ QR Label</button>
+          <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();openDetail('${t.fbKey||t.id}')">✏️ Edit</button>
         </div>
       </div>
     </div>`).join('');
 }
 function filterTotes(v) { renderTotes(v); }
 
-// ─── VOICE INPUT ───
-// Strategy: use continuous recognition. Each time a "final" result arrives,
-// we start a pause timer. If the user keeps talking the timer resets.
-// When the timer fires (silence), we commit whatever was said as one item.
-// This means you just say items naturally with a brief pause between them.
-
-function toggleVoice() {
-  isListening ? stopVoice() : startVoice();
+function findTote(key) {
+  return totes.find(t => t.fbKey === key || String(t.id) === String(key));
 }
+
+// ─── VOICE ───
+function toggleVoice() { isListening ? stopVoice() : startVoice(); }
 
 function startVoice() {
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SR) {
-    alert('Voice input requires Safari on iPhone (iOS 14.5+) or Chrome. Try the Type tab instead.');
-    return;
-  }
-
-  pendingText = '';
-  clearTimeout(pauseTimer);
-
+  if (!SR) { alert('Voice input requires Safari on iPhone (iOS 14.5+) or Chrome.'); return; }
+  pendingText = ''; clearTimeout(pauseTimer);
   recognition = new SR();
   recognition.continuous = true;
   recognition.interimResults = true;
   recognition.lang = 'en-US';
-  recognition.maxAlternatives = 1;
-
   recognition.onstart = () => {
     isListening = true;
     document.getElementById('mic-ring').classList.add('listening');
     setVoiceLabel('🔴 Listening… say an item', true);
     setBubble('Say something…', false);
   };
-
   recognition.onresult = (e) => {
     let interim = '';
-    // Collect all final text since last onresult
     for (let i = e.resultIndex; i < e.results.length; i++) {
-      const transcript = e.results[i][0].transcript.trim();
+      const t = e.results[i][0].transcript.trim();
       if (e.results[i].isFinal) {
-        pendingText += (pendingText ? ' ' : '') + transcript;
-        // Reset the pause timer — new speech arrived
+        pendingText += (pendingText ? ' ' : '') + t;
         clearTimeout(pauseTimer);
         pauseTimer = setTimeout(commitItem, PAUSE_MS);
-      } else {
-        interim = transcript;
-      }
+      } else { interim = t; }
     }
-    // Show live feedback
     const display = (pendingText + (interim ? ' ' + interim : '')).trim();
     setBubble(display || 'Say something…', !!display);
   };
-
   recognition.onerror = (e) => {
-    if (e.error === 'not-allowed') {
-      alert('Microphone blocked. Go to Settings → Safari → Microphone and allow this site.');
-    } else if (e.error === 'no-speech') {
-      // normal — just keep going
-      return;
-    }
-    stopVoice();
+    if (e.error === 'not-allowed') alert('Microphone blocked. Go to Settings → Safari → Microphone and allow this site.');
+    else if (e.error !== 'no-speech') stopVoice();
   };
-
-  // iOS Safari stops after ~60s silence — auto-restart so it keeps listening
   recognition.onend = () => {
-    if (isListening) {
-      // commit anything pending before restart
-      if (pendingText.trim()) commitItem();
-      try { recognition.start(); } catch(e) {}
-    }
+    if (isListening) { if (pendingText.trim()) commitItem(); try { recognition.start(); } catch(e) {} }
   };
-
   recognition.start();
 }
 
 function commitItem() {
   clearTimeout(pauseTimer);
-  const raw = pendingText.trim();
-  pendingText = '';
+  const raw = pendingText.trim(); pendingText = '';
   if (!raw) return;
-
-  // Clean up common speech artifacts
-  const cleaned = raw
-    .replace(/^(and|also|plus|then|uh|um|like)\s+/i, '')
-    .replace(/\s+(and|also)$/i, '')
-    .replace(/[.,!?]+$/, '')
-    .trim();
-
+  const cleaned = raw.replace(/^(and|also|plus|then|uh|um|like)\s+/i,'').replace(/\s+(and|also)$/i,'').replace(/[.,!?]+$/,'').trim();
   if (!cleaned) return;
-
-  // Capitalize first letter
   const item = cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
-
-  if (!newItems.includes(item)) {
-    newItems.push(item);
-    renderNewItems();
-    if (navigator.vibrate) navigator.vibrate(40);
-  }
-
-  setBubble('✅ Added: ' + item + '\n\nSay next item…', true);
-  setTimeout(() => {
-    if (isListening) setBubble('Say next item…', false);
-  }, 1500);
+  if (!newItems.includes(item)) { newItems.push(item); renderNewItems(); if (navigator.vibrate) navigator.vibrate(40); }
+  setBubble('Added: ' + item + '\n\nSay next item…', true);
+  setTimeout(() => { if (isListening) setBubble('Say next item…', false); }, 1500);
 }
 
 function stopVoice() {
@@ -428,13 +498,11 @@ function stopVoice() {
 
 function setVoiceLabel(txt, active) {
   const el = document.getElementById('voice-label');
-  el.textContent = txt;
-  el.className = 'voice-label' + (active ? ' active' : '');
+  el.textContent = txt; el.className = 'voice-label' + (active ? ' active' : '');
 }
 function setBubble(txt, speaking) {
   const el = document.getElementById('live-bubble');
-  el.textContent = txt;
-  el.className = 'live-bubble' + (speaking ? ' speaking' : '');
+  el.textContent = txt; el.className = 'live-bubble' + (speaking ? ' speaking' : '');
 }
 
 // ─── AI PHOTO ───
@@ -454,29 +522,23 @@ function handlePhoto(input) {
 async function scanPhoto(b64, mime) {
   const pill = document.getElementById('ai-pill');
   const msg = document.getElementById('ai-msg');
-  pill.classList.add('show');
-  msg.textContent = 'Analyzing photo…';
+  pill.classList.add('show'); msg.textContent = 'Analyzing photo…';
   try {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-6', max_tokens: 1000,
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 1000,
         messages: [{ role: 'user', content: [
           { type: 'image', source: { type: 'base64', media_type: mime, data: b64 } },
-          { type: 'text', text: 'You help someone organize their shed. List every distinct item visible in this storage tote photo. Be specific but concise (e.g. "garden gloves", "extension cord", "WD-40 can"). Return ONLY a JSON array of strings, no markdown. Example: ["garden gloves","extension cord"]' }
-        ]}]
-      })
+          { type: 'text', text: 'List every distinct item visible in this storage tote photo. Be specific but concise. Return ONLY a JSON array of strings, no markdown. Example: ["garden gloves","extension cord"]' }
+        ]}]})
     });
     const data = await res.json();
     const text = (data.content.find(b=>b.type==='text')?.text||'[]').replace(/```json|```/g,'').trim();
     let items; try { items = JSON.parse(text); } catch { items = []; }
     items.forEach(i => { const v = i.trim(); if (v && !newItems.includes(v)) newItems.push(v); });
     renderNewItems();
-    msg.textContent = 'Found '+items.length+' item'+(items.length!==1?'s':'');
-  } catch {
-    msg.textContent = 'Could not analyze photo. Try again or add manually.';
-  }
+    msg.textContent = 'Found ' + items.length + ' item' + (items.length!==1?'s':'');
+  } catch { msg.textContent = 'Could not analyze photo. Try again or add manually.'; }
 }
 
 // ─── MANUAL ───
@@ -488,62 +550,69 @@ function addNewItem() {
 }
 function removeNewItem(i) { newItems.splice(i,1); renderNewItems(); }
 function renderNewItems() {
-  const ul = document.getElementById('new-item-list');
-  if (!newItems.length) { ul.innerHTML = ''; return; }
-  ul.innerHTML = newItems.map((item,i)=>
+  document.getElementById('new-item-list').innerHTML = newItems.map((item,i)=>
     '<li class="new-item">📦 '+esc(item)+'<button class="del" onclick="removeNewItem('+i+')">✕</button></li>'
   ).join('');
 }
 
-function saveTote() {
+async function saveTote() {
   const name = document.getElementById('new-name').value.trim();
   if (!name) { alert('Give this tote a name first!'); return; }
-
   stopVoice();
   const id = totes.length ? Math.max(...totes.map(t=>t.id))+1 : 1;
-  totes.push({ id, name, items: [...newItems], created: new Date().toLocaleDateString() });
-  persist();
+  const tote = { id, name, items: [...newItems], created: new Date().toLocaleDateString() };
+  totes.push(tote);
+  await persist(tote);
+  // reset
   document.getElementById('new-name').value = '';
   document.getElementById('photo-thumb').style.display = 'none';
   document.getElementById('photo-input').value = '';
   document.getElementById('ai-pill').classList.remove('show');
-  newItems = []; renderNewItems();
-  switchMethod('voice');
+  newItems = []; renderNewItems(); switchMethod('voice');
   showPage('totes');
-  setTimeout(() => openQR(id), 350);
+  setTimeout(() => openQR(tote.fbKey || tote.id), 350);
 }
 
 // ─── DETAIL SHEET ───
-function openDetail(id) {
-  const t = totes.find(t=>t.id===id); if(!t) return;
+function openDetail(key) {
+  const t = findTote(key); if(!t) return;
   document.getElementById('sheet-title').textContent = '#'+t.id+' — '+t.name;
+  const k = t.fbKey || t.id;
   document.getElementById('sheet-body').innerHTML =
     '<p style="font-size:0.78rem;color:var(--muted);margin-bottom:14px;">'+t.items.length+' items · Added '+t.created+'</p>'+
-    '<ul class="item-list">'+t.items.map((item,i)=>'<li>📦 '+esc(item)+'<button class="del" onclick="removeSheetItem('+id+','+i+')">✕</button></li>').join('')+'</ul>'+
+    '<ul class="item-list">'+t.items.map((item,i)=>'<li>📦 '+esc(item)+'<button class="del" onclick="removeSheetItem(\''+k+'\','+i+')">✕</button></li>').join('')+'</ul>'+
     '<div class="input-row" style="margin-top:12px;">'+
-      '<input type="text" id="sheet-add" placeholder="Add item…" onkeydown="if(event.key===\'Enter\') addSheetItem('+id+')">'+
-      '<button class="btn btn-ghost btn-sm" onclick="addSheetItem('+id+')">Add</button>'+
-    '</div>'+
-    '<div class="divider"></div>'+
+      '<input type="text" id="sheet-add" placeholder="Add item…" onkeydown="if(event.key===\'Enter\') addSheetItem(\''+k+'\')">'+
+      '<button class="btn btn-ghost btn-sm" onclick="addSheetItem(\''+k+'\')">Add</button>'+
+    '</div><div class="divider"></div>'+
     '<div style="display:flex;gap:10px;flex-wrap:wrap;">'+
-      '<button class="btn btn-primary btn-sm" onclick="openQR('+id+')">🖨️ QR Label</button>'+
-      '<button class="btn btn-danger btn-sm" onclick="deleteTote('+id+')">🗑️ Delete</button>'+
+      '<button class="btn btn-primary btn-sm" onclick="openQR(\''+k+'\')">🖨️ QR Label</button>'+
+      '<button class="btn btn-danger btn-sm" onclick="deleteTote(\''+k+'\')">🗑️ Delete</button>'+
     '</div><div style="height:8px;"></div>'+
     '<button class="btn btn-ghost btn-full" onclick="closeSheet()">Done</button>';
   document.getElementById('detail-sheet').classList.add('open');
 }
-function addSheetItem(id) {
-  const t = totes.find(t=>t.id===id);
+
+async function addSheetItem(key) {
+  const t = findTote(key);
   const v = document.getElementById('sheet-add').value.trim();
-  if (!v||!t) return; t.items.push(v); persist(); openDetail(id);
+  if (!v||!t) return;
+  t.items.push(v);
+  await persist(t);
+  openDetail(key);
 }
-function removeSheetItem(id,i) {
-  const t = totes.find(t=>t.id===id); if(!t) return;
-  t.items.splice(i,1); persist(); openDetail(id);
+async function removeSheetItem(key, i) {
+  const t = findTote(key); if(!t) return;
+  t.items.splice(i,1);
+  await persist(t);
+  openDetail(key);
 }
-function deleteTote(id) {
+async function deleteTote(key) {
   if (!confirm('Delete this tote?')) return;
-  totes = totes.filter(t=>t.id!==id); persist(); closeSheet(); renderTotes();
+  const t = findTote(key);
+  totes = totes.filter(x => (x.fbKey||x.id) !== key);
+  await deleteFromStore(t);
+  closeSheet(); renderTotes();
 }
 function closeSheet() {
   document.getElementById('detail-sheet').classList.remove('open');
@@ -554,9 +623,9 @@ document.getElementById('detail-sheet').addEventListener('click', e => {
 });
 
 // ─── QR ───
-function openQR(id) {
-  const t = totes.find(t=>t.id===id); if(!t) return;
-  const url = window.location.href.split('?')[0]+'?tote='+id;
+function openQR(key) {
+  const t = findTote(key); if(!t) return;
+  const url = window.location.href.split('?')[0]+'?tote='+t.id;
   document.getElementById('sheet-title').textContent = 'QR Label — Tote #'+t.id;
   document.getElementById('sheet-body').innerHTML =
     '<div class="qr-label">'+
@@ -568,7 +637,7 @@ function openQR(id) {
     '</div>'+
     '<div style="display:flex;gap:10px;margin-bottom:12px;">'+
       '<button class="btn btn-primary btn-sm" onclick="window.print()">🖨️ Print Label</button>'+
-      '<button class="btn btn-ghost btn-sm" onclick="openDetail('+id+')">← Back</button>'+
+      '<button class="btn btn-ghost btn-sm" onclick="openDetail(\''+key+'\')">← Back</button>'+
     '</div>'+
     '<button class="btn btn-ghost btn-full" onclick="closeSheet()">Done</button>';
   document.getElementById('detail-sheet').classList.add('open');
@@ -586,6 +655,7 @@ function doLookup() {
   const el = document.getElementById('lookup-result');
   const t = totes.find(t=>t.id===id);
   if (!t) { el.innerHTML='<div class="card" style="border-color:#ff6b6b;color:#ff6b6b;text-align:center;">No tote #'+id+' found.</div>'; return; }
+  const k = t.fbKey || t.id;
   el.innerHTML=
     '<div style="background:var(--surface);border-radius:16px;border:2px solid var(--yellow);overflow:hidden;">'+
       '<div style="background:linear-gradient(135deg,var(--yellow),var(--yellow-dark));padding:12px 16px;">'+
@@ -595,8 +665,8 @@ function doLookup() {
         '<p style="font-size:0.78rem;color:var(--muted);margin-bottom:12px;">'+t.items.length+' items · '+t.created+'</p>'+
         '<ul class="item-list">'+t.items.map(i=>'<li>📦 '+esc(i)+'</li>').join('')+'</ul>'+
         '<div style="margin-top:14px;display:flex;gap:8px;">'+
-          '<button class="btn btn-primary btn-sm" onclick="openDetail('+t.id+')">✏️ Edit</button>'+
-          '<button class="btn btn-ghost btn-sm" onclick="openQR('+t.id+')">🖨️ QR Label</button>'+
+          '<button class="btn btn-primary btn-sm" onclick="openDetail(\''+k+'\')">✏️ Edit</button>'+
+          '<button class="btn btn-ghost btn-sm" onclick="openQR(\''+k+'\')">🖨️ QR Label</button>'+
         '</div>'+
       '</div>'+
     '</div>';
@@ -604,10 +674,25 @@ function doLookup() {
 
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
+// ─── INIT ───
 window.addEventListener('load', () => {
+  const saved = localStorage.getItem('firebase-url');
+  if (saved && saved !== 'local') {
+    firebaseUrl = saved; useFirebase = true;
+    document.getElementById('setup-screen').classList.add('hidden');
+    loadTotes().then(startPolling);
+  } else if (saved === 'local') {
+    document.getElementById('setup-screen').classList.add('hidden');
+    loadTotes();
+  }
+  // else show setup screen
   const p = new URLSearchParams(window.location.search);
-  if (p.get('tote')) { showPage('scan'); document.getElementById('lookup-num').value=p.get('tote'); doLookup(); }
-  else renderTotes();
+  if (p.get('tote')) {
+    document.getElementById('setup-screen').classList.add('hidden');
+    showPage('scan');
+    document.getElementById('lookup-num').value = p.get('tote');
+    loadTotes().then(doLookup);
+  }
 });
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
 </script>
