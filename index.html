@@ -57,6 +57,8 @@ input:focus{border-color:var(--yellow);}
 .input-row{display:flex;gap:8px;align-items:center;}.input-row input{flex:1;}
 .item-list{list-style:none;display:flex;flex-direction:column;gap:6px;}
 .item-list li{display:flex;align-items:center;gap:10px;background:var(--surface2);border-radius:10px;padding:10px 12px;font-size:0.88rem;}
+.item-list li.new-item{animation:popIn 0.3s cubic-bezier(0.34,1.56,0.64,1);}
+@keyframes popIn{from{opacity:0;transform:scale(0.85);}to{opacity:1;transform:scale(1);}}
 .item-list .del{margin-left:auto;background:none;border:none;color:var(--muted);font-size:1.1rem;cursor:pointer;padding:2px 6px;}
 .item-list .del:active{color:#ff6b6b;}
 .search-wrap{position:relative;margin-bottom:14px;}.search-wrap input{padding-left:40px;}
@@ -80,29 +82,55 @@ input:focus{border-color:var(--yellow);}
 .divider{height:1px;background:var(--border);margin:14px 0;}
 .spinner{width:14px;height:14px;border-radius:50%;border:2px solid rgba(245,197,24,0.3);border-top-color:var(--yellow);animation:spin 0.7s linear infinite;flex-shrink:0;}
 @keyframes spin{to{transform:rotate(360deg);}}
+.ai-pill{display:none;background:rgba(245,197,24,0.12);border:1px solid rgba(245,197,24,0.3);border-radius:30px;padding:8px 14px;font-size:0.82rem;color:var(--yellow);align-items:center;gap:8px;margin-bottom:12px;}
+.ai-pill.show{display:flex;}
 
-/* ── ADD METHOD TABS ── */
+/* ── METHOD TABS ── */
 .method-tabs{display:flex;gap:6px;margin-bottom:14px;}
 .method-tab{flex:1;padding:9px 4px;border:1.5px solid var(--border);border-radius:10px;background:var(--surface2);color:var(--muted);font-size:0.7rem;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;font-family:inherit;transition:all 0.15s;}
 .method-tab .micon{font-size:1.3rem;}
 .method-tab.active{border-color:var(--yellow);color:var(--yellow);background:rgba(245,197,24,0.08);}
 .method-panel{display:none;}.method-panel.active{display:block;}
 
-/* ── VOICE RECORDER ── */
-.voice-area{text-align:center;padding:10px 0 6px;}
-.mic-btn{width:86px;height:86px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:2.2rem;margin:0 auto 14px;transition:all 0.2s;background:var(--surface2);border:3px solid var(--border);}
-.mic-btn.listening{background:rgba(231,76,60,0.15);border-color:#e74c3c;animation:micPulse 1.2s ease-in-out infinite;}
-.mic-btn.processing{background:rgba(245,197,24,0.1);border-color:var(--yellow);}
-@keyframes micPulse{0%,100%{box-shadow:0 0 0 0 rgba(231,76,60,0.4);}50%{box-shadow:0 0 0 14px rgba(231,76,60,0);}}
-.voice-status{font-size:0.88rem;color:var(--muted);margin-bottom:12px;min-height:20px;}
-.voice-status.active{color:var(--yellow);}
-.voice-transcript{background:var(--surface2);border:1.5px solid var(--border);border-radius:12px;padding:12px 14px;font-size:0.9rem;min-height:52px;color:var(--text);line-height:1.5;margin-bottom:10px;text-align:left;font-style:italic;}
-.voice-transcript.has-text{font-style:normal;border-color:var(--yellow);}
-.voice-hint{font-size:0.75rem;color:var(--muted);line-height:1.5;margin-bottom:10px;}
+/* ── VOICE UI ── */
+.voice-center{display:flex;flex-direction:column;align-items:center;padding:8px 0 12px;}
 
-/* ── AI PHOTO ── */
-.ai-pill{display:none;background:rgba(245,197,24,0.12);border:1px solid rgba(245,197,24,0.3);border-radius:30px;padding:8px 14px;font-size:0.82rem;color:var(--yellow);align-items:center;gap:8px;margin-bottom:12px;}
-.ai-pill.show{display:flex;}
+.mic-ring{
+  width:96px;height:96px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:14px;cursor:pointer;
+  border:3px solid var(--border);
+  background:var(--surface2);
+  transition:all 0.2s;
+  position:relative;
+}
+.mic-ring .mic-icon{font-size:2.4rem;line-height:1;pointer-events:none;}
+.mic-ring.listening{border-color:#e74c3c;background:rgba(231,76,60,0.12);}
+.mic-ring.listening::before{
+  content:'';position:absolute;inset:-8px;border-radius:50%;
+  border:2px solid rgba(231,76,60,0.4);
+  animation:ripple 1.4s ease-out infinite;
+}
+.mic-ring.listening::after{
+  content:'';position:absolute;inset:-16px;border-radius:50%;
+  border:2px solid rgba(231,76,60,0.2);
+  animation:ripple 1.4s ease-out 0.4s infinite;
+}
+@keyframes ripple{0%{opacity:1;transform:scale(0.9);}100%{opacity:0;transform:scale(1.25);}}
+
+.voice-label{font-size:0.88rem;font-weight:700;color:var(--muted);margin-bottom:6px;text-align:center;}
+.voice-label.active{color:var(--yellow);}
+
+/* live transcript bubble */
+.live-bubble{
+  width:100%;background:var(--surface2);border:1.5px solid var(--border);
+  border-radius:12px;padding:11px 14px;min-height:44px;
+  font-size:0.9rem;color:var(--muted);font-style:italic;
+  line-height:1.4;margin-bottom:10px;transition:border-color 0.2s;
+}
+.live-bubble.speaking{border-color:var(--yellow);color:var(--text);font-style:normal;}
+
+.voice-hint{font-size:0.74rem;color:var(--muted);text-align:center;line-height:1.5;padding:0 4px;}
 
 @media print{body *{visibility:hidden !important;}.qr-label,.qr-label *{visibility:visible !important;}.qr-label{position:fixed;inset:0;border-radius:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}}
 </style>
@@ -137,11 +165,8 @@ input:focus{border-color:var(--yellow);}
           <label class="form-label">Tote Name / Label</label>
           <input type="text" id="new-name" placeholder="e.g. Garden Tools, Holiday Lights…">
         </div>
-
         <div class="form-group">
           <label class="form-label">Add Items</label>
-
-          <!-- Method tabs -->
           <div class="method-tabs">
             <button class="method-tab active" id="tab-voice" onclick="switchMethod('voice')">
               <span class="micon">🎙️</span>Voice
@@ -154,20 +179,19 @@ input:focus{border-color:var(--yellow);}
             </button>
           </div>
 
-          <!-- VOICE PANEL -->
+          <!-- VOICE -->
           <div class="method-panel active" id="panel-voice">
-            <div class="voice-area">
-              <button class="mic-btn" id="mic-btn" onclick="toggleVoice()">🎙️</button>
-              <div class="voice-status" id="voice-status">Tap the mic and read off what's in the tote</div>
-              <div class="voice-transcript" id="voice-transcript">Your words will appear here…</div>
-              <div class="voice-hint">💡 Say items naturally, e.g. "extension cord, garden gloves, and a bag of mulch".<br>Tap mic again when done — AI will split into individual items.</div>
-              <button class="btn btn-primary btn-full" id="voice-parse-btn" style="display:none;" onclick="parseVoiceItems()">
-                ✨ Add Items from Speech
-              </button>
+            <div class="voice-center">
+              <div class="mic-ring" id="mic-ring" onclick="toggleVoice()">
+                <span class="mic-icon">🎙️</span>
+              </div>
+              <div class="voice-label" id="voice-label">Tap mic, then say each item</div>
+              <div class="live-bubble" id="live-bubble">Heard items will appear here as you speak…</div>
+              <div class="voice-hint">Say one item at a time — pause briefly between each.<br>e.g. "extension cord" <em>(pause)</em> "garden gloves" <em>(pause)</em> "rake"</div>
             </div>
           </div>
 
-          <!-- AI PHOTO PANEL -->
+          <!-- AI PHOTO -->
           <div class="method-panel" id="panel-photo">
             <input type="file" accept="image/*" id="photo-input" style="display:none;" onchange="handlePhoto(this)">
             <div id="photo-thumb" style="display:none;margin-bottom:10px;">
@@ -177,10 +201,10 @@ input:focus{border-color:var(--yellow);}
             <button class="btn btn-ghost btn-full" onclick="document.getElementById('photo-input').click()" style="margin-bottom:8px;">
               📷 Take or Upload Photo
             </button>
-            <div class="voice-hint" style="margin-top:4px;">AI will identify every item it can see in the photo.</div>
+            <div style="font-size:0.74rem;color:var(--muted);text-align:center;">AI identifies every item it sees in the photo.</div>
           </div>
 
-          <!-- TYPE PANEL -->
+          <!-- TYPE -->
           <div class="method-panel" id="panel-type">
             <div class="input-row" style="margin-bottom:8px;">
               <input type="text" id="item-input" placeholder="Type an item name…" onkeydown="if(event.key==='Enter'){addNewItem();this.focus();}">
@@ -188,10 +212,8 @@ input:focus{border-color:var(--yellow);}
             </div>
           </div>
 
-          <!-- Shared item list (all methods add here) -->
-          <div style="margin-top:4px;">
-            <ul class="item-list" id="new-item-list"></ul>
-          </div>
+          <!-- shared list -->
+          <ul class="item-list" id="new-item-list" style="margin-top:8px;"></ul>
         </div>
       </div>
       <button class="btn btn-primary btn-full" onclick="saveTote()">💾 Save &amp; Generate QR Code</button>
@@ -236,22 +258,23 @@ let totes = JSON.parse(localStorage.getItem('shed-totes') || '[]');
 let newItems = [];
 let recognition = null;
 let isListening = false;
-let fullTranscript = '';
+// Accumulate finals between natural speech pauses
+let pendingText = '';
+let pauseTimer = null;
+const PAUSE_MS = 1200; // silence = item boundary
 
 function persist() { localStorage.setItem('shed-totes', JSON.stringify(totes)); }
 
 // ─── NAV ───
-const pages = ['totes','add','scan'];
 function showPage(name) {
-  pages.forEach(p => {
+  ['totes','add','scan'].forEach(p => {
     document.getElementById('page-'+p).classList.toggle('active', p===name);
     document.getElementById('tab-'+p).classList.toggle('active', p===name);
   });
-  if (name === 'totes') renderTotes();
   if (name !== 'add') stopVoice();
+  if (name === 'totes') renderTotes();
 }
 
-// ─── METHOD TABS ───
 function switchMethod(name) {
   ['voice','photo','type'].forEach(m => {
     document.getElementById('tab-'+m).classList.toggle('active', m===name);
@@ -260,7 +283,7 @@ function switchMethod(name) {
   if (name !== 'voice') stopVoice();
 }
 
-// ─── RENDER TOTES ───
+// ─── TOTE LIST ───
 function renderTotes(filter='') {
   const list = document.getElementById('tote-list');
   const fl = filter.toLowerCase();
@@ -290,153 +313,128 @@ function renderTotes(filter='') {
 function filterTotes(v) { renderTotes(v); }
 
 // ─── VOICE INPUT ───
+// Strategy: use continuous recognition. Each time a "final" result arrives,
+// we start a pause timer. If the user keeps talking the timer resets.
+// When the timer fires (silence), we commit whatever was said as one item.
+// This means you just say items naturally with a brief pause between them.
+
 function toggleVoice() {
-  if (isListening) {
-    stopVoice();
-  } else {
-    startVoice();
-  }
+  isListening ? stopVoice() : startVoice();
 }
 
 function startVoice() {
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SpeechRecognition) {
-    alert('Voice input is not supported in this browser. Try Safari on iPhone (iOS 14.5+) or Chrome.');
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) {
+    alert('Voice input requires Safari on iPhone (iOS 14.5+) or Chrome. Try the Type tab instead.');
     return;
   }
 
-  recognition = new SpeechRecognition();
-  recognition.continuous = true;       // keep listening until tapped again
-  recognition.interimResults = true;   // show words as they're spoken
-  recognition.lang = 'en-US';
+  pendingText = '';
+  clearTimeout(pauseTimer);
 
-  fullTranscript = '';
+  recognition = new SR();
+  recognition.continuous = true;
+  recognition.interimResults = true;
+  recognition.lang = 'en-US';
+  recognition.maxAlternatives = 1;
 
   recognition.onstart = () => {
     isListening = true;
-    const btn = document.getElementById('mic-btn');
-    btn.textContent = '⏹️';
-    btn.className = 'mic-btn listening';
-    setVoiceStatus('🎙️ Listening… say what\'s in the tote', true);
-    document.getElementById('voice-transcript').textContent = '';
-    document.getElementById('voice-transcript').className = 'voice-transcript';
-    document.getElementById('voice-parse-btn').style.display = 'none';
+    document.getElementById('mic-ring').classList.add('listening');
+    setVoiceLabel('🔴 Listening… say an item', true);
+    setBubble('Say something…', false);
   };
 
   recognition.onresult = (e) => {
     let interim = '';
-    let final = '';
+    // Collect all final text since last onresult
     for (let i = e.resultIndex; i < e.results.length; i++) {
-      const t = e.results[i][0].transcript;
-      if (e.results[i].isFinal) final += t + ' ';
-      else interim += t;
+      const transcript = e.results[i][0].transcript.trim();
+      if (e.results[i].isFinal) {
+        pendingText += (pendingText ? ' ' : '') + transcript;
+        // Reset the pause timer — new speech arrived
+        clearTimeout(pauseTimer);
+        pauseTimer = setTimeout(commitItem, PAUSE_MS);
+      } else {
+        interim = transcript;
+      }
     }
-    fullTranscript += final;
-    const display = fullTranscript + interim;
-    const el = document.getElementById('voice-transcript');
-    el.textContent = display || 'Listening…';
-    el.className = 'voice-transcript' + (display ? ' has-text' : '');
+    // Show live feedback
+    const display = (pendingText + (interim ? ' ' + interim : '')).trim();
+    setBubble(display || 'Say something…', !!display);
   };
 
   recognition.onerror = (e) => {
     if (e.error === 'not-allowed') {
-      alert('Microphone access denied. Go to Settings → Safari → Microphone and allow access.');
-    } else if (e.error !== 'no-speech') {
-      setVoiceStatus('⚠️ Error: ' + e.error + '. Tap mic to try again.', false);
+      alert('Microphone blocked. Go to Settings → Safari → Microphone and allow this site.');
+    } else if (e.error === 'no-speech') {
+      // normal — just keep going
+      return;
     }
-    stopVoice(false);
+    stopVoice();
   };
 
+  // iOS Safari stops after ~60s silence — auto-restart so it keeps listening
   recognition.onend = () => {
-    // Auto-stopped (e.g. silence timeout) — show parse button if we got something
     if (isListening) {
-      isListening = false;
-      finishListening();
+      // commit anything pending before restart
+      if (pendingText.trim()) commitItem();
+      try { recognition.start(); } catch(e) {}
     }
   };
 
   recognition.start();
 }
 
-function stopVoice(finish = true) {
-  if (recognition) {
-    try { recognition.stop(); } catch(e) {}
-    recognition = null;
-  }
-  if (isListening) {
-    isListening = false;
-    if (finish) finishListening();
-  }
-}
+function commitItem() {
+  clearTimeout(pauseTimer);
+  const raw = pendingText.trim();
+  pendingText = '';
+  if (!raw) return;
 
-function finishListening() {
-  const btn = document.getElementById('mic-btn');
-  btn.textContent = '🎙️';
-  btn.className = 'mic-btn';
-  const transcript = fullTranscript.trim();
-  if (transcript) {
-    setVoiceStatus('✅ Got it! Tap the button below to add items.', true);
-    document.getElementById('voice-transcript').className = 'voice-transcript has-text';
-    document.getElementById('voice-transcript').textContent = transcript;
-    document.getElementById('voice-parse-btn').style.display = 'flex';
-  } else {
-    setVoiceStatus('Tap the mic and read off what\'s in the tote', false);
-    document.getElementById('voice-transcript').textContent = 'Your words will appear here…';
-    document.getElementById('voice-transcript').className = 'voice-transcript';
-  }
-}
+  // Clean up common speech artifacts
+  const cleaned = raw
+    .replace(/^(and|also|plus|then|uh|um|like)\s+/i, '')
+    .replace(/\s+(and|also)$/i, '')
+    .replace(/[.,!?]+$/, '')
+    .trim();
 
-function setVoiceStatus(msg, active) {
-  const el = document.getElementById('voice-status');
-  el.textContent = msg;
-  el.className = 'voice-status' + (active ? ' active' : '');
-}
+  if (!cleaned) return;
 
-async function parseVoiceItems() {
-  const transcript = document.getElementById('voice-transcript').textContent.trim();
-  if (!transcript) return;
+  // Capitalize first letter
+  const item = cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
 
-  const btn = document.getElementById('voice-parse-btn');
-  btn.textContent = '✨ Processing…';
-  btn.disabled = true;
-  setVoiceStatus('🤖 AI is splitting your speech into items…', true);
-
-  try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 500,
-        messages: [{
-          role: 'user',
-          content: 'Someone spoke aloud the contents of a shed storage tote. Parse their speech into a clean list of individual items. Fix any obvious speech-to-text errors. Return ONLY a JSON array of short item name strings, no markdown, no explanation.\n\nSpeech: "' + transcript + '"'
-        }]
-      })
-    });
-    const data = await res.json();
-    const text = (data.content.find(b=>b.type==='text')?.text||'[]').replace(/```json|```/g,'').trim();
-    let items;
-    try { items = JSON.parse(text); } catch { items = []; }
-
-    items.forEach(i => { const v = String(i).trim(); if (v && !newItems.includes(v)) newItems.push(v); });
+  if (!newItems.includes(item)) {
+    newItems.push(item);
     renderNewItems();
-    setVoiceStatus('✅ Added '+items.length+' item'+(items.length!==1?'s':'')+' — tap mic to add more!', false);
-
-    // Reset voice area for another round
-    fullTranscript = '';
-    document.getElementById('voice-transcript').textContent = 'Your words will appear here…';
-    document.getElementById('voice-transcript').className = 'voice-transcript';
-    btn.style.display = 'none';
-  } catch(e) {
-    setVoiceStatus('⚠️ Couldn\'t process — items added as-is.', false);
-    // Fallback: add raw transcript as one item
-    if (transcript && !newItems.includes(transcript)) newItems.push(transcript);
-    renderNewItems();
+    if (navigator.vibrate) navigator.vibrate(40);
   }
 
-  btn.textContent = '✨ Add Items from Speech';
-  btn.disabled = false;
+  setBubble('✅ Added: ' + item + '\n\nSay next item…', true);
+  setTimeout(() => {
+    if (isListening) setBubble('Say next item…', false);
+  }, 1500);
+}
+
+function stopVoice() {
+  clearTimeout(pauseTimer);
+  if (pendingText.trim()) commitItem();
+  isListening = false;
+  if (recognition) { try { recognition.stop(); } catch(e) {} recognition = null; }
+  document.getElementById('mic-ring').classList.remove('listening');
+  setVoiceLabel('Tap mic, then say each item', false);
+  setBubble('Heard items will appear here as you speak…', false);
+}
+
+function setVoiceLabel(txt, active) {
+  const el = document.getElementById('voice-label');
+  el.textContent = txt;
+  el.className = 'voice-label' + (active ? ' active' : '');
+}
+function setBubble(txt, speaking) {
+  const el = document.getElementById('live-bubble');
+  el.textContent = txt;
+  el.className = 'live-bubble' + (speaking ? ' speaking' : '');
 }
 
 // ─── AI PHOTO ───
@@ -466,53 +464,50 @@ async function scanPhoto(b64, mime) {
         model: 'claude-sonnet-4-6', max_tokens: 1000,
         messages: [{ role: 'user', content: [
           { type: 'image', source: { type: 'base64', media_type: mime, data: b64 } },
-          { type: 'text', text: 'You help organize a shed. List every distinct item you can see in this photo of a storage tote. Be specific but concise (e.g. "garden gloves", "extension cord", "WD-40 can"). Return ONLY a JSON array of strings, no markdown. Example: ["garden gloves","extension cord"]' }
+          { type: 'text', text: 'You help someone organize their shed. List every distinct item visible in this storage tote photo. Be specific but concise (e.g. "garden gloves", "extension cord", "WD-40 can"). Return ONLY a JSON array of strings, no markdown. Example: ["garden gloves","extension cord"]' }
         ]}]
       })
     });
     const data = await res.json();
     const text = (data.content.find(b=>b.type==='text')?.text||'[]').replace(/```json|```/g,'').trim();
     let items; try { items = JSON.parse(text); } catch { items = []; }
-    items.forEach(i => { if (!newItems.includes(i)) newItems.push(i); });
+    items.forEach(i => { const v = i.trim(); if (v && !newItems.includes(v)) newItems.push(v); });
     renderNewItems();
-    msg.textContent = '✅ Found '+items.length+' item'+(items.length!==1?'s':'')+'.';
+    msg.textContent = '✅ Found '+items.length+' item'+(items.length!==1?'s':\'\');
   } catch {
-    msg.textContent = '⚠️ Couldn\'t analyze photo — add items manually.';
+    msg.textContent = '⚠️ Couldn\'t analyze photo — try again or add manually.';
   }
 }
 
-// ─── MANUAL ITEMS ───
+// ─── MANUAL ───
 function addNewItem() {
   const inp = document.getElementById('item-input');
   const v = inp.value.trim(); if (!v) return;
-  newItems.push(v); inp.value = ''; renderNewItems();
+  if (!newItems.includes(v)) newItems.push(v);
+  inp.value = ''; renderNewItems();
 }
 function removeNewItem(i) { newItems.splice(i,1); renderNewItems(); }
 function renderNewItems() {
   const ul = document.getElementById('new-item-list');
-  ul.innerHTML = newItems.length
-    ? newItems.map((item,i)=>'<li>📦 '+esc(item)+'<button class="del" onclick="removeNewItem('+i+')">✕</button></li>').join('')
-    : '';
+  if (!newItems.length) { ul.innerHTML = ''; return; }
+  ul.innerHTML = newItems.map((item,i)=>
+    '<li class="new-item">📦 '+esc(item)+'<button class="del" onclick="removeNewItem('+i+')">✕</button></li>'
+  ).join('');
 }
 
 function saveTote() {
   const name = document.getElementById('new-name').value.trim();
   if (!name) { alert('Give this tote a name first!'); return; }
   if (!newItems.length) { alert('Add at least one item first!'); return; }
+  stopVoice();
   const id = totes.length ? Math.max(...totes.map(t=>t.id))+1 : 1;
   totes.push({ id, name, items: [...newItems], created: new Date().toLocaleDateString() });
   persist();
-  // reset
   document.getElementById('new-name').value = '';
   document.getElementById('photo-thumb').style.display = 'none';
   document.getElementById('photo-input').value = '';
   document.getElementById('ai-pill').classList.remove('show');
-  document.getElementById('voice-transcript').textContent = 'Your words will appear here…';
-  document.getElementById('voice-transcript').className = 'voice-transcript';
-  document.getElementById('voice-parse-btn').style.display = 'none';
-  setVoiceStatus('Tap the mic and read off what\'s in the tote', false);
-  fullTranscript = ''; newItems = [];
-  renderNewItems();
+  newItems = []; renderNewItems();
   switchMethod('voice');
   showPage('totes');
   setTimeout(() => openQR(id), 350);
@@ -555,13 +550,13 @@ function closeSheet() {
   renderTotes(document.getElementById('search-input').value);
 }
 document.getElementById('detail-sheet').addEventListener('click', e => {
-  if (e.target === document.getElementById('detail-sheet')) closeSheet();
+  if (e.target===document.getElementById('detail-sheet')) closeSheet();
 });
 
-// ─── QR CODE ───
+// ─── QR ───
 function openQR(id) {
   const t = totes.find(t=>t.id===id); if(!t) return;
-  const url = window.location.href.split('?')[0] + '?tote=' + id;
+  const url = window.location.href.split('?')[0]+'?tote='+id;
   document.getElementById('sheet-title').textContent = 'QR Label — Tote #'+t.id;
   document.getElementById('sheet-body').innerHTML =
     '<div class="qr-label">'+
@@ -579,8 +574,7 @@ function openQR(id) {
   document.getElementById('detail-sheet').classList.add('open');
   setTimeout(() => {
     new QRCode(document.getElementById('qr-canvas'), {
-      text: url, width: 160, height: 160,
-      colorDark: '#000', colorLight: '#fff',
+      text: url, width:160, height:160, colorDark:'#000', colorLight:'#fff',
       correctLevel: QRCode.CorrectLevel.M
     });
   }, 80);
@@ -591,8 +585,8 @@ function doLookup() {
   const id = parseInt(document.getElementById('lookup-num').value);
   const el = document.getElementById('lookup-result');
   const t = totes.find(t=>t.id===id);
-  if (!t) { el.innerHTML = '<div class="card" style="border-color:#ff6b6b;color:#ff6b6b;text-align:center;">No tote #'+id+' found.</div>'; return; }
-  el.innerHTML =
+  if (!t) { el.innerHTML='<div class="card" style="border-color:#ff6b6b;color:#ff6b6b;text-align:center;">No tote #'+id+' found.</div>'; return; }
+  el.innerHTML=
     '<div style="background:var(--surface);border-radius:16px;border:2px solid var(--yellow);overflow:hidden;">'+
       '<div style="background:linear-gradient(135deg,var(--yellow),var(--yellow-dark));padding:12px 16px;">'+
         '<div class="tote-num">#'+t.id+'</div><div class="tote-label">'+esc(t.name)+'</div>'+
@@ -608,23 +602,14 @@ function doLookup() {
     '</div>';
 }
 
-// ─── UTILS ───
-function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
-// ─── INIT ───
 window.addEventListener('load', () => {
   const p = new URLSearchParams(window.location.search);
-  if (p.get('tote')) {
-    showPage('scan');
-    document.getElementById('lookup-num').value = p.get('tote');
-    doLookup();
-  } else {
-    renderTotes();
-  }
+  if (p.get('tote')) { showPage('scan'); document.getElementById('lookup-num').value=p.get('tote'); doLookup(); }
+  else renderTotes();
 });
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js').catch(()=>{});
-}
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
 </script>
 </body>
 </html>
