@@ -11,300 +11,108 @@
 <link rel="apple-touch-icon" href="icon-192.png">
 <title>Shed Tote Organizer</title>
 <style>
-  :root {
-    --yellow: #f5c518;
-    --yellow-dark: #d4a900;
-    --bg: #0f0f1a;
-    --surface: #1c1c2e;
-    --surface2: #252538;
-    --border: #2e2e45;
-    --text: #f0f0f0;
-    --muted: #888;
-    --safe-top: env(safe-area-inset-top, 44px);
-    --safe-bottom: env(safe-area-inset-bottom, 20px);
-    --tab-h: 60px;
-  }
+:root {
+  --yellow:#f5c518; --yellow-dark:#d4a900;
+  --bg:#0f0f1a; --surface:#1c1c2e; --surface2:#252538; --border:#2e2e45;
+  --text:#f0f0f0; --muted:#888;
+  --safe-top:env(safe-area-inset-top,44px);
+  --safe-bottom:env(safe-area-inset-bottom,20px);
+  --tab-h:60px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;width:100%;background:var(--bg);color:var(--text);font-family:-apple-system,'SF Pro Display','Helvetica Neue',sans-serif;overflow:hidden;position:fixed;}
+#app{display:flex;flex-direction:column;height:100%;}
+.status-bar-spacer{height:var(--safe-top);background:var(--yellow);flex-shrink:0;}
+.topbar{background:linear-gradient(135deg,var(--yellow),var(--yellow-dark));padding:10px 18px 14px;flex-shrink:0;}
+.topbar h1{font-size:1.25rem;font-weight:800;color:#111;}
+.topbar .subtitle{font-size:0.75rem;color:#444;margin-top:1px;}
+.page-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 16px calc(var(--tab-h) + var(--safe-bottom) + 16px);}
+.tab-bar{position:fixed;bottom:0;left:0;right:0;height:calc(var(--tab-h) + var(--safe-bottom));padding-bottom:var(--safe-bottom);background:var(--surface);border-top:1px solid var(--border);display:flex;z-index:50;}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;padding-top:6px;color:var(--muted);font-size:0.65rem;font-weight:600;border:none;background:none;}
+.tab .icon{font-size:1.4rem;line-height:1;}
+.tab.active{color:var(--yellow);}
+.page{display:none;}.page.active{display:block;}
+.card{background:var(--surface);border-radius:16px;padding:16px;margin-bottom:14px;border:1px solid var(--border);}
+.tote-list{display:flex;flex-direction:column;gap:12px;}
+.tote-card{background:var(--surface);border-radius:16px;overflow:hidden;border:1px solid var(--border);transition:transform 0.1s;}
+.tote-card:active{transform:scale(0.985);}
+.tote-band{background:linear-gradient(135deg,var(--yellow),var(--yellow-dark));padding:12px 14px;display:flex;align-items:center;justify-content:space-between;}
+.tote-num{font-size:1.5rem;font-weight:900;color:#111;line-height:1;}
+.tote-label{font-size:0.8rem;font-weight:700;color:#333;margin-top:1px;}
+.tote-badge{background:rgba(0,0,0,0.18);color:#111;padding:4px 10px;border-radius:20px;font-size:0.75rem;font-weight:800;}
+.tote-body{padding:12px 14px;}
+.tote-preview{font-size:0.82rem;color:var(--muted);line-height:1.5;margin-bottom:10px;min-height:38px;}
+.tote-actions{display:flex;gap:8px;}
+.btn{border:none;border-radius:10px;padding:11px 18px;font-weight:700;font-size:0.9rem;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:opacity 0.15s,transform 0.1s;font-family:inherit;}
+.btn:active{opacity:0.75;transform:scale(0.96);}
+.btn-primary{background:var(--yellow);color:#111;}
+.btn-ghost{background:var(--surface2);color:var(--text);}
+.btn-danger{background:#3a1212;color:#ff6b6b;}
+.btn-sm{padding:7px 13px;font-size:0.78rem;border-radius:8px;}
+.btn-full{width:100%;justify-content:center;padding:14px;font-size:1rem;}
+.form-group{margin-bottom:14px;}
+.form-label{font-size:0.78rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px;display:block;}
+input[type=text],input[type=number]{width:100%;padding:12px 14px;background:var(--surface2);border:1.5px solid var(--border);border-radius:12px;color:var(--text);font-size:1rem;font-family:inherit;outline:none;transition:border-color 0.15s;-webkit-appearance:none;}
+input:focus{border-color:var(--yellow);}
+.input-row{display:flex;gap:8px;align-items:center;}.input-row input{flex:1;}
+.ai-pill{display:none;background:rgba(245,197,24,0.12);border:1px solid rgba(245,197,24,0.3);border-radius:30px;padding:8px 14px;font-size:0.82rem;color:var(--yellow);align-items:center;gap:8px;margin-bottom:12px;}
+.ai-pill.show{display:flex;}
+.item-list{list-style:none;display:flex;flex-direction:column;gap:6px;}
+.item-list li{display:flex;align-items:center;gap:10px;background:var(--surface2);border-radius:10px;padding:10px 12px;font-size:0.88rem;}
+.item-list .del{margin-left:auto;background:none;border:none;color:var(--muted);font-size:1.1rem;cursor:pointer;padding:2px 6px;}
+.item-list .del:active{color:#ff6b6b;}
+.search-wrap{position:relative;margin-bottom:14px;}.search-wrap input{padding-left:40px;}
+.search-wrap .sicon{position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:1rem;pointer-events:none;}
+.section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.section-hdr h2{font-size:1.1rem;font-weight:800;}
+.count-badge{background:var(--yellow);color:#111;font-size:0.72rem;font-weight:800;padding:3px 8px;border-radius:20px;}
+.sheet-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:200;align-items:flex-end;}
+.sheet-overlay.open{display:flex;}
+.sheet{background:var(--surface);border-radius:22px 22px 0 0;width:100%;max-height:92vh;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 18px calc(var(--safe-bottom) + 16px);animation:slideUp 0.25s cubic-bezier(0.34,1.56,0.64,1);}
+@keyframes slideUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+.sheet-handle{width:36px;height:4px;border-radius:2px;background:var(--border);margin:10px auto 16px;}
+.sheet-title{font-size:1.15rem;font-weight:800;margin-bottom:16px;}
+.qr-label{background:white;color:#111;border-radius:14px;padding:20px;text-align:center;margin-bottom:14px;}
+.qr-label h3{font-size:1.2rem;font-weight:900;margin-bottom:2px;}
+.qr-sublabel{font-size:0.9rem;font-weight:700;color:#333;margin-bottom:10px;}
+.qr-items-preview{font-size:0.72rem;color:#555;line-height:1.5;}
+#qr-canvas{margin:0 auto 10px;}
+.empty{text-align:center;padding:50px 20px;color:var(--muted);}
+.empty .eicon{font-size:3.5rem;margin-bottom:12px;}
+.empty p{font-size:0.9rem;line-height:1.5;}
+.divider{height:1px;background:var(--border);margin:14px 0;}
+.spinner{width:14px;height:14px;border-radius:50%;border:2px solid rgba(245,197,24,0.3);border-top-color:var(--yellow);animation:spin 0.7s linear infinite;flex-shrink:0;}
+@keyframes spin{to{transform:rotate(360deg);}}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+/* ── ADD METHODS ── */
+.add-methods{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;}
+.add-method-btn{background:var(--surface2);border:1.5px solid var(--border);border-radius:12px;padding:12px 6px;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;color:var(--text);font-family:inherit;transition:border-color 0.15s,background 0.15s;}
+.add-method-btn:active{border-color:var(--yellow);background:rgba(245,197,24,0.08);}
+.add-method-btn .micon{font-size:1.5rem;}
+.add-method-btn .mlabel{font-size:0.68rem;font-weight:700;color:var(--muted);text-align:center;line-height:1.2;}
 
-  html, body {
-    height: 100%; width: 100%;
-    background: var(--bg);
-    color: var(--text);
-    font-family: -apple-system, 'SF Pro Display', 'Helvetica Neue', sans-serif;
-    overflow: hidden;
-    position: fixed;
-  }
+/* ── BARCODE SCANNER ── */
+.scan-modal{display:none;position:fixed;inset:0;background:#000;z-index:300;flex-direction:column;}
+.scan-modal.open{display:flex;}
+.scan-header{padding:calc(var(--safe-top) + 8px) 16px 12px;background:rgba(0,0,0,0.8);display:flex;align-items:center;gap:12px;flex-shrink:0;}
+.scan-header h2{font-size:1rem;font-weight:700;color:#fff;flex:1;}
+.scan-viewport{position:relative;flex:1;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+#scan-video{width:100%;height:100%;object-fit:cover;}
+.scan-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;}
+.scan-frame{width:75%;max-width:300px;aspect-ratio:2.2/1;border:3px solid var(--yellow);border-radius:14px;box-shadow:0 0 0 2000px rgba(0,0,0,0.52);position:relative;}
+.scan-corners::before,.scan-corners::after{content:'';position:absolute;width:20px;height:20px;border-color:var(--yellow);border-style:solid;}
+.scan-laser{position:absolute;left:5%;right:5%;top:50%;height:2px;background:linear-gradient(90deg,transparent,var(--yellow),transparent);box-shadow:0 0 6px var(--yellow);animation:laser 1.6s ease-in-out infinite;}
+@keyframes laser{0%,100%{top:15%;}50%{top:82%;}}
+.scan-hint{color:#fff;font-size:0.8rem;margin-top:20px;background:rgba(0,0,0,0.55);padding:6px 16px;border-radius:20px;font-weight:600;}
+.scan-footer{padding:14px 16px calc(var(--safe-bottom) + 10px);background:rgba(0,0,0,0.85);flex-shrink:0;}
+.scan-result-box{background:var(--surface);border-radius:12px;padding:12px 14px;margin-bottom:10px;border:1.5px solid var(--border);display:none;}
+.scan-result-box.show{display:block;}
+.scan-result-box.found{border-color:var(--yellow);}
+.srb-name{font-weight:700;font-size:0.95rem;color:var(--text);margin-bottom:2px;}
+.srb-upc{font-size:0.72rem;color:var(--muted);}
+.scan-btns{display:flex;gap:8px;}
 
-  /* ── LAYOUT ── */
-  #app {
-    display: flex; flex-direction: column;
-    height: 100%;
-  }
-
-  .status-bar-spacer {
-    height: var(--safe-top);
-    background: var(--yellow);
-    flex-shrink: 0;
-  }
-
-  .topbar {
-    background: var(--yellow);
-    padding: 10px 18px 14px;
-    flex-shrink: 0;
-  }
-  .topbar h1 { font-size: 1.25rem; font-weight: 800; color: #111; }
-  .topbar .subtitle { font-size: 0.75rem; color: #555; margin-top: 1px; }
-
-  .page-scroll {
-    flex: 1;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    padding: 16px 16px calc(var(--tab-h) + var(--safe-bottom) + 16px);
-  }
-
-  /* ── BOTTOM TABS ── */
-  .tab-bar {
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    height: calc(var(--tab-h) + var(--safe-bottom));
-    padding-bottom: var(--safe-bottom);
-    background: var(--surface);
-    border-top: 1px solid var(--border);
-    display: flex;
-    z-index: 50;
-  }
-  .tab {
-    flex: 1; display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    gap: 3px; cursor: pointer;
-    padding-top: 6px;
-    color: var(--muted);
-    font-size: 0.65rem; font-weight: 600;
-    transition: color 0.15s;
-    border: none; background: none;
-  }
-  .tab .icon { font-size: 1.4rem; line-height: 1; }
-  .tab.active { color: var(--yellow); }
-  .tab.active .icon { transform: scale(1.05); }
-
-  /* ── PAGES ── */
-  .page { display: none; }
-  .page.active { display: block; }
-
-  /* ── CARDS ── */
-  .card {
-    background: var(--surface);
-    border-radius: 16px;
-    padding: 16px;
-    margin-bottom: 14px;
-    border: 1px solid var(--border);
-  }
-
-  /* ── TOTE CARDS ── */
-  .tote-list { display: flex; flex-direction: column; gap: 12px; }
-
-  .tote-card {
-    background: var(--surface);
-    border-radius: 16px;
-    overflow: hidden;
-    border: 1px solid var(--border);
-    active-scale: 0.98;
-  }
-  .tote-card:active { transform: scale(0.985); }
-
-  .tote-band {
-    background: linear-gradient(135deg, var(--yellow), var(--yellow-dark));
-    padding: 12px 14px;
-    display: flex; align-items: center; justify-content: space-between;
-  }
-  .tote-band-left { }
-  .tote-num { font-size: 1.5rem; font-weight: 900; color: #111; line-height: 1; }
-  .tote-label { font-size: 0.8rem; font-weight: 700; color: #333; margin-top: 1px; }
-  .tote-badge {
-    background: rgba(0,0,0,0.18);
-    color: #111;
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 0.75rem; font-weight: 800;
-  }
-
-  .tote-body { padding: 12px 14px; }
-  .tote-preview { font-size: 0.82rem; color: var(--muted); line-height: 1.5; margin-bottom: 10px; min-height: 38px; }
-  .tote-actions { display: flex; gap: 8px; }
-
-  /* ── BUTTONS ── */
-  .btn {
-    border: none; border-radius: 10px;
-    padding: 11px 18px;
-    font-weight: 700; font-size: 0.9rem;
-    cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
-    transition: opacity 0.15s, transform 0.1s;
-  }
-  .btn:active { opacity: 0.75; transform: scale(0.96); }
-  .btn-primary { background: var(--yellow); color: #111; }
-  .btn-ghost { background: var(--surface2); color: var(--text); }
-  .btn-danger { background: #3a1212; color: #ff6b6b; }
-  .btn-sm { padding: 7px 13px; font-size: 0.78rem; border-radius: 8px; }
-  .btn-full { width: 100%; justify-content: center; padding: 14px; font-size: 1rem; }
-
-  /* ── FORM ELEMENTS ── */
-  .form-group { margin-bottom: 14px; }
-  .form-label { font-size: 0.78rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px; display: block; }
-
-  input[type=text], input[type=number], textarea {
-    width: 100%; padding: 12px 14px;
-    background: var(--surface2); border: 1.5px solid var(--border);
-    border-radius: 12px; color: var(--text);
-    font-size: 1rem; font-family: inherit;
-    outline: none; transition: border-color 0.15s;
-    -webkit-appearance: none;
-  }
-  input:focus, textarea:focus { border-color: var(--yellow); }
-
-  .input-row { display: flex; gap: 8px; align-items: center; }
-  .input-row input { flex: 1; }
-
-  /* ── PHOTO ZONE ── */
-  .photo-zone {
-    border: 2px dashed var(--border);
-    border-radius: 14px;
-    min-height: 130px;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 6px; cursor: pointer; position: relative; overflow: hidden;
-    transition: border-color 0.2s;
-    background: var(--surface2);
-  }
-  .photo-zone:active { border-color: var(--yellow); }
-  .photo-zone img { width: 100%; max-height: 220px; object-fit: cover; border-radius: 12px; }
-  .photo-zone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; font-size: 0; }
-  .photo-icon { font-size: 2.2rem; }
-  .photo-hint { font-size: 0.82rem; color: var(--muted); text-align: center; }
-
-  /* ── AI STATUS ── */
-  .ai-pill {
-    display: none;
-    background: rgba(245,197,24,0.12);
-    border: 1px solid rgba(245,197,24,0.3);
-    border-radius: 30px;
-    padding: 8px 14px;
-    font-size: 0.82rem; color: var(--yellow);
-    align-items: center; gap: 8px;
-    margin-bottom: 12px;
-  }
-  .ai-pill.show { display: flex; }
-
-  /* ── ITEM LIST ── */
-  .item-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
-  .item-list li {
-    display: flex; align-items: center; gap: 10px;
-    background: var(--surface2); border-radius: 10px;
-    padding: 10px 12px; font-size: 0.88rem;
-  }
-  .item-list .del { margin-left: auto; background: none; border: none; color: var(--muted); font-size: 1.1rem; cursor: pointer; padding: 2px 4px; }
-  .item-list .del:active { color: #ff6b6b; }
-
-  /* ── SEARCH ── */
-  .search-wrap { position: relative; margin-bottom: 14px; }
-  .search-wrap input { padding-left: 40px; }
-  .search-wrap .sicon { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); font-size: 1rem; pointer-events: none; }
-
-  /* ── SECTION HEADER ── */
-  .section-hdr {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 12px;
-  }
-  .section-hdr h2 { font-size: 1.1rem; font-weight: 800; }
-  .count-badge {
-    background: var(--yellow); color: #111;
-    font-size: 0.72rem; font-weight: 800;
-    padding: 3px 8px; border-radius: 20px;
-  }
-
-  /* ── SHEET (modal) ── */
-  .sheet-overlay {
-    display: none; position: fixed; inset: 0;
-    background: rgba(0,0,0,0.6);
-    z-index: 200; align-items: flex-end;
-  }
-  .sheet-overlay.open { display: flex; }
-  .sheet {
-    background: var(--surface);
-    border-radius: 22px 22px 0 0;
-    width: 100%;
-    max-height: 90vh;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    padding: 0 18px calc(var(--safe-bottom) + 16px);
-    animation: slideUp 0.25s cubic-bezier(0.34,1.56,0.64,1);
-  }
-  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-  .sheet-handle {
-    width: 36px; height: 4px; border-radius: 2px;
-    background: var(--border); margin: 10px auto 16px;
-  }
-  .sheet-title { font-size: 1.15rem; font-weight: 800; margin-bottom: 16px; }
-
-  /* ── QR PRINT ── */
-  .qr-label {
-    background: white; color: #111;
-    border-radius: 14px; padding: 20px;
-    text-align: center; margin-bottom: 14px;
-  }
-  .qr-label h3 { font-size: 1.2rem; font-weight: 900; margin-bottom: 2px; }
-  .qr-label .qr-sublabel { font-size: 0.9rem; font-weight: 700; color: #333; margin-bottom: 10px; }
-  #qr-canvas { margin: 0 auto 10px; }
-  .qr-items-preview { font-size: 0.72rem; color: #555; line-height: 1.5; }
-
-  /* ── EMPTY STATE ── */
-  .empty { text-align: center; padding: 50px 20px; color: var(--muted); }
-  .empty .eicon { font-size: 3.5rem; margin-bottom: 12px; }
-  .empty p { font-size: 0.9rem; line-height: 1.5; }
-
-  /* ── LOOKUP RESULT ── */
-  .lookup-result-card {
-    background: var(--surface); border-radius: 16px;
-    border: 2px solid var(--yellow); overflow: hidden; margin-top: 14px;
-  }
-  .lookup-result-band {
-    background: linear-gradient(135deg, var(--yellow), var(--yellow-dark));
-    padding: 12px 16px;
-  }
-  .lookup-result-body { padding: 14px 16px; }
-
-  /* ── DIVIDER ── */
-  .divider { height: 1px; background: var(--border); margin: 14px 0; }
-
-  /* ── SPINNER ── */
-  .spinner {
-    width: 14px; height: 14px; border-radius: 50%;
-    border: 2px solid rgba(245,197,24,0.3);
-    border-top-color: var(--yellow);
-    animation: spin 0.7s linear infinite; flex-shrink: 0;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* ── PRINT ── */
-  @media print {
-    body * { visibility: hidden !important; }
-    .qr-label, .qr-label * { visibility: visible !important; }
-    .qr-label {
-      position: fixed; inset: 0; border-radius: 0;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-    }
-  }
-
-  /* ── INSTALL BANNER ── */
-  .install-banner {
-    background: var(--surface2); border: 1px solid var(--yellow);
-    border-radius: 14px; padding: 14px 16px;
-    margin-bottom: 14px; display: none;
-  }
-  .install-banner.show { display: block; }
-  .install-banner h3 { font-size: 0.9rem; font-weight: 800; color: var(--yellow); margin-bottom: 4px; }
-  .install-banner p { font-size: 0.8rem; color: var(--muted); line-height: 1.5; }
-  .install-steps { margin-top: 8px; }
-  .install-steps li { font-size: 0.82rem; color: var(--text); margin-bottom: 4px; list-style: none; padding-left: 4px; }
+@media print{body *{visibility:hidden !important;}.qr-label,.qr-label *{visibility:visible !important;}.qr-label{position:fixed;inset:0;border-radius:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}}
 </style>
 </head>
 <body>
@@ -312,26 +120,12 @@
   <div class="status-bar-spacer"></div>
   <div class="topbar">
     <h1>📦 Tote Organizer</h1>
-    <div class="subtitle">Shed inventory with AI & QR codes</div>
+    <div class="subtitle">Barcode scan · AI photo · QR labels</div>
   </div>
-
-  <!-- PAGES -->
   <div class="page-scroll">
 
     <!-- TOTES PAGE -->
     <div id="page-totes" class="page active">
-      <!-- Install banner (shown on first visit in browser) -->
-      <div class="install-banner" id="install-banner">
-        <h3>📲 Add to Home Screen</h3>
-        <p>Install this as an app on your iPhone:</p>
-        <ul class="install-steps">
-          <li>1. Tap the <strong>Share</strong> button (box with arrow ↑) in Safari</li>
-          <li>2. Scroll down and tap <strong>"Add to Home Screen"</strong></li>
-          <li>3. Tap <strong>Add</strong> — done! Works offline too.</li>
-        </ul>
-        <button class="btn btn-ghost btn-sm" style="margin-top:10px;" onclick="document.getElementById('install-banner').classList.remove('show')">Got it</button>
-      </div>
-
       <div class="section-hdr">
         <h2>My Totes</h2>
         <span class="count-badge" id="tote-count">0</span>
@@ -345,75 +139,90 @@
 
     <!-- ADD PAGE -->
     <div id="page-add" class="page">
-      <div class="section-hdr" style="margin-bottom:16px;">
-        <h2>New Tote</h2>
-      </div>
-
+      <div class="section-hdr" style="margin-bottom:16px;"><h2>Add New Tote</h2></div>
       <div class="card">
         <div class="form-group">
           <label class="form-label">Tote Name / Label</label>
           <input type="text" id="new-name" placeholder="e.g. Garden Tools, Holiday Lights…">
         </div>
-
         <div class="form-group">
-          <label class="form-label">📷 Photo — AI identifies contents</label>
-          <div class="photo-zone" id="photo-zone">
-            <div id="photo-placeholder">
-              <div class="photo-icon">📷</div>
-              <div class="photo-hint">Tap to take or upload a photo<br>AI will list what's inside</div>
-            </div>
-            <img id="photo-preview" style="display:none;">
-            <input type="file" accept="image/*" capture="environment" id="photo-input" onchange="handlePhoto(this)">
+          <label class="form-label">Add Items</label>
+          <div class="add-methods">
+            <button class="add-method-btn" onclick="startBarcodeScanner()">
+              <span class="micon">📷</span>
+              <span class="mlabel">Scan<br>Barcode</span>
+            </button>
+            <button class="add-method-btn" onclick="document.getElementById('photo-input').click()">
+              <span class="micon">🖼️</span>
+              <span class="mlabel">AI Photo<br>Scan</span>
+            </button>
+            <button class="add-method-btn" onclick="document.getElementById('item-input').focus()">
+              <span class="micon">⌨️</span>
+              <span class="mlabel">Type<br>Item</span>
+            </button>
           </div>
-        </div>
-
-        <div class="ai-pill" id="ai-pill">
-          <div class="spinner"></div>
-          <span id="ai-msg">Analyzing photo…</span>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Items</label>
+          <input type="file" accept="image/*" id="photo-input" style="display:none;" onchange="handlePhoto(this)">
+          <div id="photo-thumb" style="display:none;margin-bottom:10px;">
+            <img id="photo-preview" style="width:100%;max-height:140px;object-fit:cover;border-radius:10px;">
+          </div>
+          <div class="ai-pill" id="ai-pill"><div class="spinner"></div><span id="ai-msg">Analyzing…</span></div>
           <div class="input-row" style="margin-bottom:10px;">
-            <input type="text" id="item-input" placeholder="Add item manually…" onkeydown="if(event.key==='Enter'){addNewItem();this.focus();}">
+            <input type="text" id="item-input" placeholder="Type an item name…" onkeydown="if(event.key==='Enter'){addNewItem();this.focus();}">
             <button class="btn btn-ghost btn-sm" onclick="addNewItem()">Add</button>
           </div>
           <ul class="item-list" id="new-item-list"></ul>
         </div>
       </div>
-
-      <button class="btn btn-primary btn-full" onclick="saveTote()">💾 Save & Generate QR Code</button>
+      <button class="btn btn-primary btn-full" onclick="saveTote()">💾 Save &amp; Generate QR Code</button>
     </div>
 
-    <!-- SCAN/LOOKUP PAGE -->
+    <!-- LOOKUP PAGE -->
     <div id="page-scan" class="page">
-      <div class="section-hdr" style="margin-bottom:16px;">
-        <h2>Look Up Tote</h2>
-      </div>
+      <div class="section-hdr" style="margin-bottom:16px;"><h2>Look Up Tote</h2></div>
       <div class="card">
         <div class="form-label" style="margin-bottom:8px;">Enter Tote Number</div>
         <div class="input-row">
           <input type="number" id="lookup-num" placeholder="e.g. 3" min="1">
           <button class="btn btn-primary btn-sm" onclick="doLookup()">Find</button>
         </div>
-        <p style="font-size:0.75rem; color:var(--muted); margin-top:10px;">💡 Scanning a QR code opens this page automatically</p>
+        <p style="font-size:0.75rem;color:var(--muted);margin-top:10px;">💡 Scanning a QR code label opens this automatically</p>
       </div>
       <div id="lookup-result"></div>
     </div>
 
   </div><!-- /page-scroll -->
 
-  <!-- BOTTOM TAB BAR -->
   <div class="tab-bar">
-    <button class="tab active" id="tab-totes" onclick="showPage('totes')">
-      <span class="icon">🗂️</span> Totes
-    </button>
-    <button class="tab" id="tab-add" onclick="showPage('add')">
-      <span class="icon">➕</span> Add
-    </button>
-    <button class="tab" id="tab-scan" onclick="showPage('scan')">
-      <span class="icon">🔍</span> Lookup
-    </button>
+    <button class="tab active" id="tab-totes" onclick="showPage('totes')"><span class="icon">🗂️</span>Totes</button>
+    <button class="tab" id="tab-add" onclick="showPage('add')"><span class="icon">➕</span>Add</button>
+    <button class="tab" id="tab-scan" onclick="showPage('scan')"><span class="icon">🔍</span>Lookup</button>
+  </div>
+</div>
+
+<!-- BARCODE SCANNER MODAL -->
+<div class="scan-modal" id="scan-modal">
+  <div class="scan-header">
+    <h2>📷 Scan Barcode</h2>
+    <button class="btn btn-ghost btn-sm" onclick="stopBarcodeScanner()">✕ Close</button>
+  </div>
+  <div class="scan-viewport">
+    <video id="scan-video" autoplay playsinline muted></video>
+    <div class="scan-overlay">
+      <div class="scan-frame">
+        <div class="scan-laser"></div>
+      </div>
+      <div class="scan-hint" id="scan-hint">Point at a barcode</div>
+    </div>
+  </div>
+  <div class="scan-footer">
+    <div class="scan-result-box" id="scan-result-box">
+      <div class="srb-name" id="srb-name"></div>
+      <div class="srb-upc" id="srb-upc"></div>
+    </div>
+    <div class="scan-btns">
+      <button class="btn btn-primary" id="scan-add-btn" style="flex:1;display:none;" onclick="addScannedItem()">➕ Add to Tote</button>
+      <button class="btn btn-ghost" style="flex:1;" onclick="stopBarcodeScanner()">Done</button>
+    </div>
   </div>
 </div>
 
@@ -426,6 +235,7 @@
   </div>
 </div>
 
+<script src="quagga.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
 // ─── STATE ───
@@ -433,6 +243,10 @@ let totes = JSON.parse(localStorage.getItem('shed-totes') || '[]');
 let newItems = [];
 let currentPhotoBase64 = null;
 let currentMime = 'image/jpeg';
+let scanStream = null;
+let lastScannedCode = null;
+let lastScannedName = null;
+let scanCooldown = false;
 
 function persist() { localStorage.setItem('shed-totes', JSON.stringify(totes)); }
 
@@ -446,7 +260,7 @@ function showPage(name) {
   if (name === 'totes') renderTotes();
 }
 
-// ─── TOTE LIST ───
+// ─── RENDER TOTES ───
 function renderTotes(filter='') {
   const list = document.getElementById('tote-list');
   const fl = filter.toLowerCase();
@@ -455,32 +269,152 @@ function renderTotes(filter='') {
     : totes;
   document.getElementById('tote-count').textContent = totes.length;
   if (!shown.length) {
-    list.innerHTML = `<div class="empty"><div class="eicon">${fl?'🔍':'🗂️'}</div><p>${fl?'No totes match your search.':'No totes yet.<br>Tap ➕ to add your first one!'}</p></div>`;
+    list.innerHTML = '<div class="empty"><div class="eicon">'+(fl?'🔍':'🗂️')+'</div><p>'+(fl?'No totes match your search.':'No totes yet.<br>Tap ➕ to add your first one!')+'</p></div>';
     return;
   }
   list.innerHTML = shown.map(t => `
     <div class="tote-card" onclick="openDetail(${t.id})">
       <div class="tote-band">
-        <div class="tote-band-left">
-          <div class="tote-num">#${t.id}</div>
-          <div class="tote-label">${esc(t.name)}</div>
-        </div>
+        <div><div class="tote-num">#${t.id}</div><div class="tote-label">${esc(t.name)}</div></div>
         <div class="tote-badge">${t.items.length} item${t.items.length!==1?'s':''}</div>
       </div>
       <div class="tote-body">
-        <div class="tote-preview">${t.items.slice(0,4).map(i=>'• '+esc(i)).join('  ')+(t.items.length>4?`  <em>+${t.items.length-4} more</em>`:'') || '<em>No items yet</em>'}</div>
+        <div class="tote-preview">${t.items.slice(0,4).map(i=>'• '+esc(i)).join('  ')+(t.items.length>4?'  <em>+'+(t.items.length-4)+' more</em>':'') || '<em>No items yet</em>'}</div>
         <div class="tote-actions">
           <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();openQR(${t.id})">🖨️ QR Label</button>
           <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();openDetail(${t.id})">✏️ Edit</button>
         </div>
       </div>
-    </div>
-  `).join('');
+    </div>`).join('');
 }
-
 function filterTotes(v) { renderTotes(v); }
 
-// ─── ADD TOTE ───
+// ─── BARCODE SCANNER ───
+async function startBarcodeScanner() {
+  const modal = document.getElementById('scan-modal');
+  document.getElementById('scan-result-box').className = 'scan-result-box';
+  document.getElementById('scan-add-btn').style.display = 'none';
+  document.getElementById('scan-hint').textContent = 'Point at a barcode';
+  lastScannedCode = null; lastScannedName = null; scanCooldown = false;
+
+  try {
+    scanStream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } }
+    });
+    document.getElementById('scan-video').srcObject = scanStream;
+    modal.classList.add('open');
+
+    Quagga.init({
+      inputStream: {
+        name: 'Live', type: 'LiveStream',
+        target: document.getElementById('scan-video'),
+        constraints: { facingMode: 'environment' }
+      },
+      decoder: {
+        readers: ['ean_reader','upc_reader','upc_e_reader','ean_8_reader','code_128_reader','code_39_reader']
+      },
+      locate: true, numOfWorkers: 0, frequency: 10
+    }, err => {
+      if (err) { console.warn('Quagga init error:', err); return; }
+      Quagga.start();
+    });
+
+    Quagga.onDetected(async result => {
+      const code = result.codeResult.code;
+      if (!code || scanCooldown || code === lastScannedCode) return;
+      scanCooldown = true;
+      lastScannedCode = code;
+      document.getElementById('scan-hint').textContent = '🔍 Looking up…';
+      if (navigator.vibrate) navigator.vibrate(80);
+      await lookupUPC(code);
+      setTimeout(() => { scanCooldown = false; }, 3000);
+    });
+
+  } catch(e) {
+    alert('Camera access needed. In Safari: Settings → Privacy & Security → Camera → allow this site.');
+  }
+}
+
+async function lookupUPC(upc) {
+  const box = document.getElementById('scan-result-box');
+  const nameEl = document.getElementById('srb-name');
+  const upcEl = document.getElementById('srb-upc');
+  const addBtn = document.getElementById('scan-add-btn');
+
+  nameEl.textContent = '🔍 Looking up product…';
+  upcEl.textContent = 'UPC: ' + upc;
+  box.className = 'scan-result-box show';
+  addBtn.style.display = 'none';
+
+  // Try Open Food Facts first (great for grocery/household)
+  try {
+    const r = await fetch(`https://world.openfoodfacts.org/api/v2/product/${upc}.json?fields=product_name,brands,quantity`);
+    const d = await r.json();
+    if (d.status === 1 && d.product && d.product.product_name) {
+      const p = d.product;
+      const name = [p.product_name, p.brands, p.quantity].filter(Boolean).join(' — ');
+      setScannedResult(name, upc, box, nameEl, upcEl, addBtn);
+      return;
+    }
+  } catch(e) {}
+
+  // Fallback: UPC Item DB
+  try {
+    const r2 = await fetch(`https://api.upcitemdb.com/prod/trial/lookup?upc=${upc}`);
+    const d2 = await r2.json();
+    if (d2.items && d2.items.length && d2.items[0].title) {
+      setScannedResult(d2.items[0].title, upc, box, nameEl, upcEl, addBtn);
+      return;
+    }
+  } catch(e) {}
+
+  // Not found — allow adding with raw UPC
+  lastScannedName = 'Item ' + upc;
+  nameEl.textContent = '⚠️ Product not in database';
+  upcEl.textContent = 'UPC: ' + upc + ' — tap Add to save anyway';
+  addBtn.style.display = 'flex';
+  addBtn.textContent = '➕ Add as Unknown Item';
+  document.getElementById('scan-hint').textContent = 'Point at a barcode';
+}
+
+function setScannedResult(name, upc, box, nameEl, upcEl, addBtn) {
+  lastScannedName = name;
+  nameEl.textContent = '✅ ' + name;
+  upcEl.textContent = 'UPC: ' + upc;
+  box.className = 'scan-result-box show found';
+  addBtn.style.display = 'flex';
+  addBtn.textContent = '➕ Add to Tote';
+  document.getElementById('scan-hint').textContent = 'Point at a barcode';
+}
+
+function addScannedItem() {
+  if (!lastScannedName) return;
+  if (!newItems.includes(lastScannedName)) {
+    newItems.push(lastScannedName);
+    renderNewItems();
+  }
+  const btn = document.getElementById('scan-add-btn');
+  btn.textContent = '✓ Added!';
+  btn.style.background = '#27ae60'; btn.style.color = '#fff';
+  setTimeout(() => {
+    btn.textContent = '➕ Add to Tote';
+    btn.style.background = ''; btn.style.color = '';
+    document.getElementById('scan-result-box').className = 'scan-result-box';
+    btn.style.display = 'none';
+    lastScannedCode = null; lastScannedName = null; scanCooldown = false;
+    document.getElementById('scan-hint').textContent = 'Point at a barcode';
+  }, 1200);
+}
+
+function stopBarcodeScanner() {
+  try { Quagga.stop(); } catch(e) {}
+  if (scanStream) { scanStream.getTracks().forEach(t => t.stop()); scanStream = null; }
+  document.getElementById('scan-modal').classList.remove('open');
+  document.getElementById('scan-video').srcObject = null;
+  lastScannedCode = null; scanCooldown = false;
+}
+
+// ─── AI PHOTO SCAN ───
 function handlePhoto(input) {
   const file = input.files[0]; if (!file) return;
   currentMime = file.type || 'image/jpeg';
@@ -488,9 +422,8 @@ function handlePhoto(input) {
   reader.onload = e => {
     const src = e.target.result;
     currentPhotoBase64 = src.split(',')[1];
-    const img = document.getElementById('photo-preview');
-    img.src = src; img.style.display = 'block';
-    document.getElementById('photo-placeholder').style.display = 'none';
+    document.getElementById('photo-preview').src = src;
+    document.getElementById('photo-thumb').style.display = 'block';
     scanPhoto(currentPhotoBase64, currentMime);
   };
   reader.readAsDataURL(file);
@@ -506,15 +439,11 @@ async function scanPhoto(b64, mime) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 1000,
-        messages: [{
-          role: 'user',
-          content: [
-            { type: 'image', source: { type: 'base64', media_type: mime, data: b64 } },
-            { type: 'text', text: 'You help organize a shed. Look at this photo of a storage tote\'s contents and list every distinct item you can identify. Be specific but concise (e.g. "garden gloves", "extension cord", "WD-40 can"). Return ONLY a JSON array of strings with no other text or markdown. Example: ["garden gloves","extension cord"]' }
-          ]
-        }]
+        model: 'claude-sonnet-4-6', max_tokens: 1000,
+        messages: [{ role: 'user', content: [
+          { type: 'image', source: { type: 'base64', media_type: mime, data: b64 } },
+          { type: 'text', text: 'You help organize a shed. List every distinct item you can see in this photo of a storage tote. Be specific but concise (e.g. "garden gloves", "extension cord", "WD-40 can"). Return ONLY a JSON array of strings, no markdown. Example: ["garden gloves","extension cord"]' }
+        ]}]
       })
     });
     const data = await res.json();
@@ -522,24 +451,22 @@ async function scanPhoto(b64, mime) {
     let items; try { items = JSON.parse(text); } catch { items = []; }
     items.forEach(i => { if (!newItems.includes(i)) newItems.push(i); });
     renderNewItems();
-    msg.textContent = `✅ Found ${items.length} item${items.length!==1?'s':''}! Add or edit below.`;
+    msg.textContent = '✅ Found '+items.length+' item'+(items.length!==1?'s':'')+' — edit or add more.';
   } catch {
     msg.textContent = '⚠️ Couldn\'t analyze photo — add items manually.';
   }
 }
 
+// ─── MANUAL ITEMS ───
 function addNewItem() {
   const inp = document.getElementById('item-input');
   const v = inp.value.trim(); if (!v) return;
-  newItems.push(v); inp.value = '';
-  renderNewItems();
+  newItems.push(v); inp.value = ''; renderNewItems();
 }
-
 function removeNewItem(i) { newItems.splice(i,1); renderNewItems(); }
-
 function renderNewItems() {
-  document.getElementById('new-item-list').innerHTML = newItems.map((item,i) =>
-    `<li>📦 ${esc(item)}<button class="del" onclick="removeNewItem(${i})">✕</button></li>`
+  document.getElementById('new-item-list').innerHTML = newItems.map((item,i)=>
+    '<li>📦 '+esc(item)+'<button class="del" onclick="removeNewItem('+i+')">✕</button></li>'
   ).join('');
 }
 
@@ -549,10 +476,8 @@ function saveTote() {
   const id = totes.length ? Math.max(...totes.map(t=>t.id))+1 : 1;
   totes.push({ id, name, items: [...newItems], created: new Date().toLocaleDateString() });
   persist();
-  // reset form
   document.getElementById('new-name').value = '';
-  document.getElementById('photo-preview').style.display = 'none';
-  document.getElementById('photo-placeholder').style.display = '';
+  document.getElementById('photo-thumb').style.display = 'none';
   document.getElementById('photo-input').value = '';
   document.getElementById('ai-pill').classList.remove('show');
   newItems = []; currentPhotoBase64 = null;
@@ -564,32 +489,26 @@ function saveTote() {
 // ─── DETAIL SHEET ───
 function openDetail(id) {
   const t = totes.find(t=>t.id===id); if(!t) return;
-  document.getElementById('sheet-title').textContent = `#${t.id} — ${t.name}`;
-  document.getElementById('sheet-body').innerHTML = `
-    <p style="font-size:0.78rem;color:var(--muted);margin-bottom:14px;">${t.items.length} items · Added ${t.created}</p>
-    <ul class="item-list" id="sheet-items">
-      ${t.items.map((item,i)=>`<li>📦 ${esc(item)}<button class="del" onclick="removeSheetItem(${id},${i})">✕</button></li>`).join('')}
-    </ul>
-    <div class="input-row" style="margin-top:12px;">
-      <input type="text" id="sheet-add" placeholder="Add item…" onkeydown="if(event.key==='Enter') addSheetItem(${id})">
-      <button class="btn btn-ghost btn-sm" onclick="addSheetItem(${id})">Add</button>
-    </div>
-    <div class="divider"></div>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;">
-      <button class="btn btn-primary btn-sm" onclick="openQR(${id})">🖨️ Print QR Label</button>
-      <button class="btn btn-danger btn-sm" onclick="deleteTote(${id})">🗑️ Delete Tote</button>
-    </div>
-    <div style="height:8px;"></div>
-    <button class="btn btn-ghost btn-full" onclick="closeSheet()">Done</button>
-  `;
+  document.getElementById('sheet-title').textContent = '#'+t.id+' — '+t.name;
+  document.getElementById('sheet-body').innerHTML =
+    '<p style="font-size:0.78rem;color:var(--muted);margin-bottom:14px;">'+t.items.length+' items · Added '+t.created+'</p>'+
+    '<ul class="item-list">'+t.items.map((item,i)=>'<li>📦 '+esc(item)+'<button class="del" onclick="removeSheetItem('+id+','+i+')">✕</button></li>').join('')+'</ul>'+
+    '<div class="input-row" style="margin-top:12px;">'+
+      '<input type="text" id="sheet-add" placeholder="Add item…" onkeydown="if(event.key===\'Enter\') addSheetItem('+id+')">'+
+      '<button class="btn btn-ghost btn-sm" onclick="addSheetItem('+id+')">Add</button>'+
+    '</div>'+
+    '<div class="divider"></div>'+
+    '<div style="display:flex;gap:10px;flex-wrap:wrap;">'+
+      '<button class="btn btn-primary btn-sm" onclick="openQR('+id+')">🖨️ QR Label</button>'+
+      '<button class="btn btn-danger btn-sm" onclick="deleteTote('+id+')">🗑️ Delete</button>'+
+    '</div><div style="height:8px;"></div>'+
+    '<button class="btn btn-ghost btn-full" onclick="closeSheet()">Done</button>';
   document.getElementById('detail-sheet').classList.add('open');
 }
-
 function addSheetItem(id) {
   const t = totes.find(t=>t.id===id);
   const v = document.getElementById('sheet-add').value.trim();
-  if (!v||!t) return;
-  t.items.push(v); persist(); openDetail(id);
+  if (!v||!t) return; t.items.push(v); persist(); openDetail(id);
 }
 function removeSheetItem(id,i) {
   const t = totes.find(t=>t.id===id); if(!t) return;
@@ -597,8 +516,7 @@ function removeSheetItem(id,i) {
 }
 function deleteTote(id) {
   if (!confirm('Delete this tote?')) return;
-  totes = totes.filter(t=>t.id!==id); persist();
-  closeSheet(); renderTotes();
+  totes = totes.filter(t=>t.id!==id); persist(); closeSheet(); renderTotes();
 }
 function closeSheet() {
   document.getElementById('detail-sheet').classList.remove('open');
@@ -612,28 +530,26 @@ document.getElementById('detail-sheet').addEventListener('click', e => {
 function openQR(id) {
   const t = totes.find(t=>t.id===id); if(!t) return;
   const url = window.location.href.split('?')[0] + '?tote=' + id;
-  document.getElementById('sheet-title').textContent = `QR Label — Tote #${t.id}`;
-  document.getElementById('sheet-body').innerHTML = `
-    <div class="qr-label" id="print-zone">
-      <h3>📦 TOTE #${t.id}</h3>
-      <div class="qr-sublabel">${esc(t.name)}</div>
-      <div id="qr-canvas" style="display:flex;justify-content:center;margin-bottom:10px;"></div>
-      <div class="qr-items-preview">${t.items.slice(0,8).map(esc).join(' · ')}</div>
-      <div style="font-size:0.65rem;color:#888;margin-top:6px;">Scan to view full contents</div>
-    </div>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
-      <button class="btn btn-primary btn-sm" onclick="window.print()">🖨️ Print Label</button>
-      <button class="btn btn-ghost btn-sm" onclick="openDetail(${id})">← Back</button>
-    </div>
-    <button class="btn btn-ghost btn-full" onclick="closeSheet()">Done</button>
-  `;
+  document.getElementById('sheet-title').textContent = 'QR Label — Tote #'+t.id;
+  document.getElementById('sheet-body').innerHTML =
+    '<div class="qr-label">'+
+      '<h3>📦 TOTE #'+t.id+'</h3>'+
+      '<div class="qr-sublabel">'+esc(t.name)+'</div>'+
+      '<div id="qr-canvas" style="display:flex;justify-content:center;margin-bottom:10px;"></div>'+
+      '<div class="qr-items-preview">'+t.items.slice(0,8).map(esc).join(' · ')+'</div>'+
+      '<div style="font-size:0.65rem;color:#888;margin-top:6px;">Scan to view contents</div>'+
+    '</div>'+
+    '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;">'+
+      '<button class="btn btn-primary btn-sm" onclick="window.print()">🖨️ Print Label</button>'+
+      '<button class="btn btn-ghost btn-sm" onclick="openDetail('+id+')">← Back</button>'+
+    '</div>'+
+    '<button class="btn btn-ghost btn-full" onclick="closeSheet()">Done</button>';
   document.getElementById('detail-sheet').classList.add('open');
   setTimeout(() => {
-    new QRCode(document.getElementById('qr-canvas'), {
-      text: url, width: 150, height: 150,
-      colorDark: '#000', colorLight: '#fff',
-      correctLevel: QRCode.CorrectLevel.M
-    });
+    const container = document.getElementById('qr-canvas');
+    const canvas = document.createElement('canvas');
+    container.appendChild(canvas);
+    new QRCode(container, { text: url, width: 160, height: 160, colorDark: '#000', colorLight: '#fff', correctLevel: QRCode.CorrectLevel.M });
   }, 80);
 }
 
@@ -642,34 +558,27 @@ function doLookup() {
   const id = parseInt(document.getElementById('lookup-num').value);
   const el = document.getElementById('lookup-result');
   const t = totes.find(t=>t.id===id);
-  if (!t) {
-    el.innerHTML = `<div class="card" style="border-color:#ff6b6b;color:#ff6b6b;text-align:center;">No tote #${id} found.</div>`;
-    return;
-  }
-  el.innerHTML = `
-    <div class="lookup-result-card">
-      <div class="lookup-result-band">
-        <div class="tote-num">#${t.id}</div>
-        <div class="tote-label">${esc(t.name)}</div>
-      </div>
-      <div class="lookup-result-body">
-        <p style="font-size:0.78rem;color:var(--muted);margin-bottom:12px;">${t.items.length} items · ${t.created}</p>
-        <ul class="item-list">${t.items.map(i=>`<li>📦 ${esc(i)}</li>`).join('')}</ul>
-        <div style="margin-top:14px;display:flex;gap:8px;">
-          <button class="btn btn-primary btn-sm" onclick="openDetail(${t.id})">✏️ Edit</button>
-          <button class="btn btn-ghost btn-sm" onclick="openQR(${t.id})">🖨️ QR Label</button>
-        </div>
-      </div>
-    </div>
-  `;
+  if (!t) { el.innerHTML = '<div class="card" style="border-color:#ff6b6b;color:#ff6b6b;text-align:center;">No tote #'+id+' found.</div>'; return; }
+  el.innerHTML =
+    '<div style="background:var(--surface);border-radius:16px;border:2px solid var(--yellow);overflow:hidden;">'+
+      '<div style="background:linear-gradient(135deg,var(--yellow),var(--yellow-dark));padding:12px 16px;">'+
+        '<div class="tote-num">#'+t.id+'</div><div class="tote-label">'+esc(t.name)+'</div>'+
+      '</div>'+
+      '<div style="padding:14px 16px;">'+
+        '<p style="font-size:0.78rem;color:var(--muted);margin-bottom:12px;">'+t.items.length+' items · '+t.created+'</p>'+
+        '<ul class="item-list">'+t.items.map(i=>'<li>📦 '+esc(i)+'</li>').join('')+'</ul>'+
+        '<div style="margin-top:14px;display:flex;gap:8px;">'+
+          '<button class="btn btn-primary btn-sm" onclick="openDetail('+t.id+')">✏️ Edit</button>'+
+          '<button class="btn btn-ghost btn-sm" onclick="openQR('+t.id+')">🖨️ QR Label</button>'+
+        '</div>'+
+      '</div>'+
+    '</div>';
 }
 
 // ─── UTILS ───
-function esc(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-// ─── URL PARAM (QR scan) ───
+// ─── URL PARAM (QR scan open) ───
 window.addEventListener('load', () => {
   const p = new URLSearchParams(window.location.search);
   if (p.get('tote')) {
@@ -677,10 +586,6 @@ window.addEventListener('load', () => {
     document.getElementById('lookup-num').value = p.get('tote');
     doLookup();
   } else {
-    // show install banner in browser (not standalone)
-    if (!window.navigator.standalone) {
-      document.getElementById('install-banner').classList.add('show');
-    }
     renderTotes();
   }
 });
