@@ -142,7 +142,7 @@ input:focus{border-color:var(--yellow);}
       <h1>📦 Tote Organizer</h1>
       <div class="sync-dot" id="sync-dot" title="Sync status"></div>
     </div>
-    <div class="subtitle">Voice · AI photo · QR labels · v9</div>
+    <div class="subtitle">Voice · AI photo · QR labels · v10</div>
   </div>
   <div class="page-scroll">
 
@@ -563,18 +563,48 @@ async function saveTote() {
   const name = document.getElementById('new-name').value.trim();
   if (!name) { alert('Give this tote a name first!'); return; }
   stopVoice();
+
+  // Disable button to prevent double-tap
+  const saveBtn = document.querySelector('[onclick="saveTote()"]');
+  if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = 'Saving…'; }
+
   const id = totes.length ? Math.max(...totes.map(t=>t.id))+1 : 1;
   const tote = { id, name, items: [...newItems], created: new Date().toLocaleDateString() };
+
+  // Save to Firebase first, THEN update local state
+  if (useFirebase) {
+    try {
+      const r = await fetch(firebaseUrl + '/totes.json', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: tote.id, name: tote.name, items: tote.items, created: tote.created })
+      });
+      const data = await r.json();
+      tote.fbKey = data.name;
+      setSyncStatus('online');
+    } catch(e) {
+      setSyncStatus('error');
+      alert('Could not save to Firebase. Check your connection and try again.');
+      if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = '💾 Save & Generate QR Code'; }
+      return;
+    }
+  }
+
   totes.push(tote);
-  await persist(tote);
-  // reset
+  if (!useFirebase) localSave();
+
+  // Reset form
   document.getElementById('new-name').value = '';
   document.getElementById('photo-thumb').style.display = 'none';
   document.getElementById('photo-input').value = '';
   document.getElementById('ai-pill').classList.remove('show');
   newItems = []; renderNewItems(); switchMethod('voice');
+  if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = '💾 Save & Generate QR Code'; }
+
+  // Go to totes page and show QR
+  renderTotes();
   showPage('totes');
-  setTimeout(() => openQR(tote.fbKey || tote.id), 350);
+  setTimeout(() => openQR(tote.fbKey || tote.id), 400);
 }
 
 // ─── DETAIL SHEET ───
