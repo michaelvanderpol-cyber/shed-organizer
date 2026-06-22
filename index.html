@@ -142,7 +142,7 @@ input:focus{border-color:var(--yellow);}
       <h1>📦 Tote Organizer</h1>
       <div class="sync-dot" id="sync-dot" title="Sync status"></div>
     </div>
-    <div class="subtitle">Voice · AI photo · QR labels · v8</div>
+    <div class="subtitle">Voice · AI photo · QR labels · v9</div>
   </div>
   <div class="page-scroll">
 
@@ -357,8 +357,12 @@ function saveSetup() {
   // Test the connection
   const errEl = document.getElementById('setup-error');
   errEl.style.display = 'none';
+  showSetupError('Trying to connect…');
   fetch(url + '/totes.json')
-    .then(r => { if (!r.ok) throw new Error(); return r.json(); })
+    .then(r => {
+      if (!r.ok) throw new Error('Server returned ' + r.status);
+      return r.json();
+    })
     .then(() => {
       localStorage.setItem('firebase-url', url);
       firebaseUrl = url;
@@ -366,7 +370,7 @@ function saveSetup() {
       document.getElementById('setup-screen').classList.add('hidden');
       loadTotes().then(startPolling);
     })
-    .catch(() => showSetupError('Could not connect — check the URL and try again.'));
+    .catch(err => showSetupError('Error: ' + err.message + ' — Make sure Rules are set to read/write true and the URL is exactly: https://shed-totes-default-rtdb.firebaseio.com'));
 }
 
 function showSetupError(msg) {
@@ -676,6 +680,9 @@ function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').repl
 
 // ─── INIT ───
 window.addEventListener('load', () => {
+  // Clear any bad cached URL so user can re-enter it
+  const resetParam = new URLSearchParams(window.location.search).get('reset');
+  if (resetParam) { localStorage.removeItem('firebase-url'); }
   const saved = localStorage.getItem('firebase-url');
   if (saved && saved !== 'local') {
     firebaseUrl = saved; useFirebase = true;
