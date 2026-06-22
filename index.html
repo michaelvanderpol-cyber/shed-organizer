@@ -140,7 +140,7 @@ input:focus{border-color:var(--yellow);}
   <div class="status-bar-spacer"></div>
   <div class="topbar">
     <h1>📦 Tote Organizer</h1>
-    <div class="subtitle">Voice · AI photo · QR labels · v4</div>
+    <div class="subtitle">Voice · AI photo · QR labels · v6</div>
   </div>
   <div class="page-scroll">
 
@@ -473,9 +473,9 @@ async function scanPhoto(b64, mime) {
     let items; try { items = JSON.parse(text); } catch { items = []; }
     items.forEach(i => { const v = i.trim(); if (v && !newItems.includes(v)) newItems.push(v); });
     renderNewItems();
-    msg.textContent = '✅ Found '+items.length+' item'+(items.length!==1?'s':\'\');
+    msg.textContent = 'Found '+items.length+' item'+(items.length!==1?'s':'');
   } catch {
-    msg.textContent = '⚠️ Couldn\'t analyze photo — try again or add manually.';
+    msg.textContent = 'Could not analyze photo. Try again or add manually.';
   }
 }
 
@@ -498,7 +498,7 @@ function renderNewItems() {
 function saveTote() {
   const name = document.getElementById('new-name').value.trim();
   if (!name) { alert('Give this tote a name first!'); return; }
-  if (!newItems.length) { alert('Add at least one item first!'); return; }
+
   stopVoice();
   const id = totes.length ? Math.max(...totes.map(t=>t.id))+1 : 1;
   totes.push({ id, name, items: [...newItems], created: new Date().toLocaleDateString() });
